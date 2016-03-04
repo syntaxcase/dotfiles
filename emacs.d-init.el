@@ -177,6 +177,9 @@
   (projectile-global-mode)
   (helm-projectile-on))
 
+(req-package org-bullets-mode
+  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
 (req-package clojure-mode
   :defer t
   :init
