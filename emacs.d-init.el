@@ -4,8 +4,21 @@
 
 ;;; Code:
 ;;; GC every 20MB allocated (instead of the default 0.76MB)
-(setq gc-cons-threshold 20000000)
+;;; This is commented out while I test the GC trick below
+; (setq gc-cons-threshold 20000000)
 
+;;; Stop GCs while in the minibuffer.
+;;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
+(defun my-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun my-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
+
+(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+
+;;; Packages
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (require 'package)
