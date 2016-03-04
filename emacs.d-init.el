@@ -39,18 +39,17 @@
 
 ;; Extend PATH environment variable. Emacs doesn't source .zshrc
 ;; so it doesn't see executables in ~/bin
-(setenv "PATH" (concat "/home/acc/bin:"
-                       "/home/acc/sw/scala-2.11.7/bin:"
+(setenv "PATH" (concat "/home/acc/sw/scala-2.11.7/bin:"
                        "/home/acc/sw/npm/bin/:"
                        "/home/acc/sw/node-v4.1.1-linux-x64/bin/:"
+                       "/home/acc/bin:"
                        (getenv "PATH")))
 
-(setq exec-path (cons "/home/acc/sw/scala-2.11.7/bin"
-                      (cons "/home/acc/sw/node-v4.1.1-linux-x64/bin/"
-                            (cons "/home/acc/sw/npm/bin/"
-                                  (cons "/home/acc/bin" exec-path)))))
-;; (setq exec-path (cons "/home/acc/sw/texlive/2014/bin/x86_64-linux"
-;;                       exec-path))
+(dolist (dir '("/home/acc/bin"
+               "/home/acc/sw/npm/bin/"
+               "/home/acc/sw/node-v4.1.1-linux-x64/bin/"
+               "/home/acc/sw/scala-2.11.7/bin"))
+  (add-to-list 'exec-path dir))
 
 ;;;; GUIX env vars
 ;; (setenv "LOCPATH" "$HOME/.guix-profile/lib/locale")
