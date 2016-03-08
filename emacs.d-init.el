@@ -294,7 +294,7 @@
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
-(req-package json
+(req-package json-mode
   :defer t
   :mode "\\.json\\'")
 
