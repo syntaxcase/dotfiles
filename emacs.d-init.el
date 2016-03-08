@@ -303,22 +303,28 @@
   :defer t
   :init (setq reftex-plug-into-AUCTeX t))
 
+(req-package tern)
+
 (req-package js2-mode
-  :require flycheck
+  :require (flycheck tern)
   :mode "\\.js\\'"
   :interpreter "node"
   :init
-   (setq js-indent-level 2)
-   (setq js2-basic-offset 2))
+  (setq js-indent-level 2)
+  (setq js2-basic-offset 2)
+  :config
+  (add-hook 'js2-mode-hook (lambda () (tern-mode t))))
 
 (req-package web-mode
-  :require flycheck
+  :require (flycheck tern)
   :defer t
   :mode ("\\.jsx$" . web-mode)
   :init
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
-  (setq web-mode-markup-indent-offset 2))
+  (setq web-mode-markup-indent-offset 2)
+  :config
+  (add-hook 'web-mode-hook (lambda () (tern-mode t))))
 
 (req-package flycheck
   :config
