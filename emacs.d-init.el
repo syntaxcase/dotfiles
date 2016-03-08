@@ -90,7 +90,7 @@
       kept-old-versions 2
       version-control t)
 
-(req-package solarized-dark
+(req-package solarized-theme
   :init
   (progn
     (setq x-underline-at-descent-line t)
@@ -189,7 +189,7 @@
   (projectile-global-mode)
   (helm-projectile-on))
 
-(req-package org-bullets-mode
+(req-package org-bullets
   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (req-package clojure-mode
@@ -198,7 +198,7 @@
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
-(req-package paredit-mode
+(req-package paredit
   :defer t
   :init
   (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
@@ -231,7 +231,7 @@
 ;;;; Rust stuff
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Set path to racer binary
-(req-package racer-mode
+(req-package racer
   :init
   (setq racer-cmd "/home/acc/bin/racer")
   ;; Set path to rust src directory
