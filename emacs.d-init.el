@@ -154,6 +154,8 @@
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
 
+(req-package iedit)
+
 (req-package spaceline
   :init (setq powerline-default-separator 'wave)
   :config
