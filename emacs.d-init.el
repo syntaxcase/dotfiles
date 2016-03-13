@@ -203,11 +203,14 @@
 (req-package paredit
   :defer t
   :init
-  (add-hook 'emacs-lisp-mode-hook       (lambda () (paredit-mode +1)))
-  (add-hook 'lisp-mode-hook             (lambda () (paredit-mode +1)))
-  (add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
-  (add-hook 'scheme-mode-hook           (lambda () (paredit-mode +1)))
-  (add-hook 'clojure-mode-hook #'paredit-mode))
+  (let ((h (lambda ()
+             (paredit-mode +1)
+             (turn-on-eldoc-mode))))
+    (add-hook 'emacs-lisp-mode-hook h)
+    (add-hook 'lisp-mode-hook h)
+    (add-hook 'lisp-interaction-mode-hook h)
+    (add-hook 'scheme-mode-hook h)
+    (add-hook 'clojure-mode-hook h)))
 
 (req-package slime
   :defer t
