@@ -120,10 +120,6 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
-(req-package indent-guide
-  :diminish indent-guide-mode
-  :config (indent-guide-global-mode))
-
 (req-package helm
   :diminish helm-mode
   :init
@@ -155,6 +151,11 @@
   :config (avy-setup-default))
 
 (req-package iedit)
+
+(req-package goto-chg
+  :commands goto-last-change
+  :bind (("C-." . goto-last-change)
+         ("C-," . goto-last-change-reverse)))
 
 (req-package spaceline
   :init (setq powerline-default-separator 'wave)
