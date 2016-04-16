@@ -234,6 +234,16 @@
   :defer t
   :init (setq python-shell-interpreter "python3"))
 
+(req-package jedi
+  :init
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t))
+
+(req-package company-jedi
+  :require (company jedi)
+  :config
+  (add-to-list 'company-backend 'company-jedi))
+
 ;;;; Rust stuff
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Set path to racer binary
