@@ -150,6 +150,10 @@
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
 
+(req-package volatile-highlights
+  :config
+  (volatile-highlights-mode t))
+
 (req-package iedit)
 
 (req-package goto-chg
