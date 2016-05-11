@@ -107,7 +107,13 @@
 
 (req-package uniquify
   :defer t
-  :config (setq uniquify-buffer-name-style 'forward))
+  :config
+  (setq uniquify-buffer-name-style 'forward)
+  (setq uniquify-separator "/")
+  ; rename after killing uniquified
+  (setq uniquify-after-kill-buffer-p t)
+  ; don't muck with special buffers
+  (setq uniquify-ignore-buffers-re "^\\*"))
 
 (req-package which-key
   :diminish which-key-mode
