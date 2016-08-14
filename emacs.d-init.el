@@ -20,7 +20,8 @@
 
 ;;; Packages
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+                         ("melpa" . "http://melpa.org/packages/")
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")))
 (require 'package)
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -243,6 +244,9 @@
 (req-package python-mode
   :defer t
   :init (setq python-shell-interpreter "python3"))
+
+(req-package ensime
+  :pin melpa-stable)
 
 (req-package jedi
   :init
