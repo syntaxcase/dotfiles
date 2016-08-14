@@ -128,6 +128,7 @@
          ("C-c C-<" . mc/mark-all-like-this)))
 
 (req-package helm
+  :demand
   :diminish helm-mode
   :init
   (progn
@@ -194,6 +195,7 @@
   :config (global-undo-tree-mode))
 
 (req-package projectile
+  :demand
   :require helm
   :init
   (setq projectile-completion-system 'helm)
