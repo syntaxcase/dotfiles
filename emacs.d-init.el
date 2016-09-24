@@ -40,6 +40,9 @@
 ;;;; disable suspend
 (global-unset-key (kbd "C-z"))
 
+;; I always want to kill the current buffer!
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+
 ;; Extend PATH environment variable. Emacs doesn't source .zshrc
 ;; so it doesn't see executables in ~/bin
 (setenv "PATH" (concat "/home/acc/sw/scala-2.11.7/bin:"
