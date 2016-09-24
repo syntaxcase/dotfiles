@@ -365,6 +365,12 @@
   :config
   (add-hook 'web-mode-hook (lambda () (tern-mode t))))
 
+(req-package helm-flycheck
+  :require (helm flycheck)
+  :defer t
+  :bind (:map flycheck-mode-map
+              ("C-c ! l" . helm-flycheck)))
+
 (req-package flycheck
   :config
   (progn
