@@ -45,7 +45,7 @@
 
 ;; Extend PATH environment variable. Emacs doesn't source .zshrc
 ;; so it doesn't see executables in ~/bin
-(setenv "PATH" (concat "/home/acc/sw/scala-2.11.7/bin:"
+(setenv "PATH" (concat "/home/acc/sw/scala-2.10.6/bin:"
                        "/home/acc/sw/npm/bin/:"
                        "/home/acc/sw/node-v5.7.1-linux-x64/bin/:"
                        "/home/acc/bin:"
@@ -54,7 +54,7 @@
 (dolist (dir '("/home/acc/bin"
                "/home/acc/sw/npm/bin/"
                "/home/acc/sw/node-v5.7.1-linux-x64/bin/"
-               "/home/acc/sw/scala-2.11.7/bin"))
+               "/home/acc/sw/scala-2.10.6/bin"))
   (add-to-list 'exec-path dir))
 
 ;;;; GUIX env vars
@@ -253,7 +253,9 @@
   :init (setq python-shell-interpreter "python3"))
 
 (req-package ensime
-  :pin melpa-stable)
+  :pin melpa-stable
+  :require helm
+  :init (setq ensime-use-helm t))
 
 (req-package jedi
   :init
