@@ -10,9 +10,11 @@
 ;;; Stop GCs while in the minibuffer.
 ;;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
 (defun my-minibuffer-setup-hook ()
+  "Disable garbage collection while in the minibuffer."
   (setq gc-cons-threshold most-positive-fixnum))
 
 (defun my-minibuffer-exit-hook ()
+  "Re-enable garbage collection when out of the minibuffer."
   (setq gc-cons-threshold 800000))
 
 (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
@@ -423,3 +425,6 @@
 (provide '.emacs)
 
 ;;; .emacs ends here
+
+(provide 'init)
+;;; init ends here
