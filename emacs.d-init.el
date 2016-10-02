@@ -97,6 +97,21 @@
       kept-old-versions 2
       version-control t)
 
+;;;; Prettify
+(setq prettify-symbols-unprettify-at-point 'right-edge)
+(global-prettify-symbols-mode 1)
+
+(defun prettify-js-symbols-hook ()
+  "Set pretty symbols for programming modes."
+  (setq prettify-symbols-alist
+        (append '(("===" . ?≡)
+                  ("!==" . ?≢))
+                prettify-symbols-alist)))
+
+(add-hook 'web-mode-hook 'prettify-js-symbols-hook)
+(add-hook 'js2-mode-hook 'prettify-js-symbols-hook)
+
+;;;; Req packages
 (req-package solarized-theme
   :init
   (progn
