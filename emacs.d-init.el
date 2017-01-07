@@ -151,6 +151,10 @@
   ; don't muck with special buffers
   (setq uniquify-ignore-buffers-re "^\\*"))
 
+(use-package persistent-scratch
+  :config
+  (persistent-scratch-setup-default))
+
 (req-package which-key
   :diminish which-key-mode
   :config (which-key-mode))
