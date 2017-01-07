@@ -7,6 +7,8 @@
 ;;; This is commented out while I test the GC trick below
 ; (setq gc-cons-threshold 20000000)
 
+(defconst +rustc-src+ "/home/acc/src/upstream/rustc-1.14.0/src" "Path to rustc source.")
+
 ;;; Stop GCs while in the minibuffer.
 ;;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
 (defun my-minibuffer-setup-hook ()
@@ -50,13 +52,17 @@
                        "/home/acc/sw/npm/bin/:"
                        "/home/acc/sw/node-v5.7.1-linux-x64/bin/:"
                        "/home/acc/bin:"
+                       "/home/acc/.cargo/bin:"
                        (getenv "PATH")))
 
 (dolist (dir '("/home/acc/bin"
+               "/home/acc/.cargo/bin/"
                "/home/acc/sw/npm/bin/"
                "/home/acc/sw/node-v5.7.1-linux-x64/bin/"
                "/home/acc/sw/scala-2.10.6/bin"))
   (add-to-list 'exec-path dir))
+
+(setenv "RUST_SRC_PATH" +rustc-src+)
 
 ;;;; GUIX env vars
 ;; (setenv "LOCPATH" "$HOME/.guix-profile/lib/locale")
@@ -296,9 +302,8 @@
 ;; Set path to racer binary
 (req-package racer
   :init
-  (setq racer-cmd "/home/acc/bin/racer")
   ;; Set path to rust src directory
-  (setq racer-rust-src-path "/home/acc/src/upstream/rust/src/"))
+  (setq racer-rust-src-path +rustc-src+))
 
 (req-package company-racer
   :require (racer company)
