@@ -117,6 +117,11 @@
 (add-hook 'web-mode-hook 'prettify-js-symbols-hook)
 (add-hook 'js2-mode-hook 'prettify-js-symbols-hook)
 
+;; Save whatever’s in the current (system) clipboard before
+;; replacing it with the Emacs’ text.
+;; https://github.com/dakrone/eos/blob/master/eos.org
+(setq save-interprogram-paste-before-kill t)
+
 ;;;; Req packages
 (req-package solarized-theme
   :init
