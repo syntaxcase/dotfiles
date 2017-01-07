@@ -216,6 +216,7 @@
   :init
   (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-align-annotations t)
   :config (global-company-mode))
 
 (req-package company-tern
