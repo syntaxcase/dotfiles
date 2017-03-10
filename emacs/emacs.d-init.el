@@ -125,6 +125,12 @@
   :config
   (persistent-scratch-setup-default))
 
+(req-package better-shell
+  :ensure t
+  :bind
+  (("C-'" . better-shell-shell)
+   ("C-=" . better-shell-remote-open)))
+
 (req-package which-key
   :diminish which-key-mode
   :config (which-key-mode))
