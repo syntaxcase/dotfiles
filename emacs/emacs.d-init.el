@@ -411,6 +411,24 @@
   (bind-keys :map alchemist-mode-map
              ("C-x C-e" . alchemist-iex-send-current-line)))
 
+;; tide configuration
+(req-package tide
+  :require (flycheck company)
+  :preface (defun setup-tide-mode ()
+             (interactive)
+             (message "Setting up tide mode")
+             (tide-setup)
+             (turn-on-eldoc-mode)
+             (tide-hl-identifier-mode +1))
+  :init
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq tide-format-options '(:indentSize 2 :tabSize 2))
+  :config
+  (add-hook 'tide-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'tide-format-before-save)))
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+
 (req-package-finish)
 
 ;;; Org-mode customization found at:
