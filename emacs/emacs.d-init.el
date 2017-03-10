@@ -287,6 +287,9 @@
   ;; Set path to rust src directory
   (setq racer-rust-src-path +rustc-src+))
 
+(req-package rust-mode
+  :init (setq rust-format-on-save t))
+
 (req-package company-racer
   :require (racer company)
   :config
