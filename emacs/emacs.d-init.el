@@ -390,6 +390,27 @@
     (flycheck-add-mode 'javascript-eslint 'web-mode)
     (flycheck-add-mode 'javascript-eslint 'js2-mode)))
 
+;; Set up the basic Elixir mode.
+(req-package elixir-mode
+  :commands elixir-mode
+  :config
+  (add-hook 'elixir-mode-hook 'alchemist-mode))
+
+;; Alchemist offers integration with the Mix tool.
+(req-package alchemist
+  :commands alchemist-mode
+  :init
+  (setq alchemist-goto-elixir-source-dir "/home/acc/src/upstream/elixir")
+  (setq alchemist-goto-erlang-source-dir "/home/acc/src/upstream/otp_src_19.2")
+  :config
+  ;; Bind some Alchemist commands to more commonly used keys.
+  (bind-keys :map alchemist-mode-map
+             ("C-c C-l" . (lambda () (interactive)
+                            (save-buffer)
+                            (alchemist-iex-compile-this-buffer))))
+  (bind-keys :map alchemist-mode-map
+             ("C-x C-e" . alchemist-iex-send-current-line)))
+
 (req-package-finish)
 
 ;;; Org-mode customization found at:
