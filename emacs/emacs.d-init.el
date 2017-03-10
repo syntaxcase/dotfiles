@@ -7,7 +7,7 @@
 ;;; This is commented out while I test the GC trick below
 ; (setq gc-cons-threshold 20000000)
 
-(defconst +rustc-src+ "/home/acc/src/upstream/rustc-1.14.0/src" "Path to rustc source.")
+(defconst +rustc-src+ "/home/acc/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
 
 ;;; Stop GCs while in the minibuffer.
 ;;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
@@ -49,30 +49,7 @@
 ;; I always want to kill the current buffer!
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 
-;; Extend PATH environment variable. Emacs doesn't source .zshrc
-;; so it doesn't see executables in ~/bin
-(setenv "PATH" (concat "/home/acc/sw/scala-2.10.6/bin:"
-                       "/home/acc/sw/npm/bin/:"
-                       "/home/acc/sw/node-v5.7.1-linux-x64/bin/:"
-                       "/home/acc/bin:"
-                       "/home/acc/.cargo/bin:"
-                       (getenv "PATH")))
-
-(dolist (dir '("/home/acc/bin"
-               "/home/acc/.cargo/bin/"
-               "/home/acc/sw/npm/bin/"
-               "/home/acc/sw/node-v5.7.1-linux-x64/bin/"
-               "/home/acc/sw/scala-2.10.6/bin"))
-  (add-to-list 'exec-path dir))
-
 (setenv "RUST_SRC_PATH" +rustc-src+)
-
-;;;; GUIX env vars
-;; (setenv "LOCPATH" "$HOME/.guix-profile/lib/locale")
-;; (setenv "GUILE_LOAD_PATH" "/home/acc/.guix-profile/share/guile/site/2.0")
-;; (setenv "GUILE_LOAD_COMPILED_PATH" "/home/acc/.guix-profile/share/guile/site/2.0")
-;; (setenv "CPATH" "/home/acc/.guix-profile/include")
-;; (setenv "LIBRARY_PATH" "/home/acc/.guix-profile/lib")
 
 ;;;; Window configuration
 (tool-bar-mode -1)
@@ -112,6 +89,13 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;;;; Req packages
+(req-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x))
+  :config
+  (setq exec-path-from-shell-variables '("PATH" "GOPATH"))
+  (exec-path-from-shell-initialize))
+
 (req-package solarized-theme
   :init
   (progn
