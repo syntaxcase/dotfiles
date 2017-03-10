@@ -121,7 +121,7 @@
   ; don't muck with special buffers
   (setq uniquify-ignore-buffers-re "^\\*"))
 
-(use-package persistent-scratch
+(req-package persistent-scratch
   :config
   (persistent-scratch-setup-default))
 
