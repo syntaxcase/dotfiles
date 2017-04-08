@@ -61,6 +61,12 @@
 (setq visible-bell t)
 (setq create-lockfiles nil)
 
+;;; paste from mouse where the point is, not where the mouse pointer is
+(setq mouse-yank-at-point t)
+
+;;; Revert a buffer if the corresponding file changes on disk
+(global-auto-revert-mode 1)
+
 ;;;; set tab width
 (setq tab-width 2)
 (setq-default indent-tabs-mode nil)
