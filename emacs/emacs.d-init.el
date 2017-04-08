@@ -74,6 +74,9 @@
 ;;;; disable line-wrapping
 (setq-default truncate-lines t)
 
+;;;; Don't use native GTK tooltips
+(setq x-gtk-use-system-tooltips nil)
+
 ;;;; Bind C-x o to M-o
 (global-set-key (kbd "M-o") 'other-window)
 
