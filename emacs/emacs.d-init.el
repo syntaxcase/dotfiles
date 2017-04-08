@@ -392,11 +392,12 @@
               ("C-c ! l" . helm-flycheck)))
 
 (req-package flycheck
+  :init
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
   :config
-  (progn
-    (global-flycheck-mode)
-    (flycheck-add-mode 'javascript-eslint 'web-mode)
-    (flycheck-add-mode 'javascript-eslint 'js2-mode)))
+  (global-flycheck-mode)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
 ;; Set up the basic Elixir mode.
 (req-package elixir-mode
