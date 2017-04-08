@@ -420,25 +420,69 @@
   (bind-keys :map alchemist-mode-map
              ("C-x C-e" . alchemist-iex-send-current-line)))
 
-;; tide configuration
+;;; Typescript
 (req-package tide
-  :require (flycheck company)
+  :require (flycheck company web-mode)
   :preface (defun setup-tide-mode ()
              (interactive)
              (message "Setting up tide mode")
              (tide-setup)
              (turn-on-eldoc-mode)
-             (tide-hl-identifier-mode +1))
+;             (tide-hl-identifier-mode +1)
+             )
   :init
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq typescript-indent-level 2)
   (setq tide-format-options '(:indentSize 2 :tabSize 2))
+
   :config
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (when (string-equal "tsx" (file-name-extension buffer-file-name))
+                (setup-tide-mode))))
+
   (add-hook 'tide-mode-hook
             (lambda ()
               (add-hook 'before-save-hook 'tide-format-before-save)))
+
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
 (req-package-finish)
+
+;;;; My utility functions!
+(defun acc/point-in-string-p (pt)
+  "Return t if PT is in a string."
+  (eq 'string (syntax-ppss-context (syntax-ppss pt))))
+
+(defun acc/beginning-of-string ()
+  "Move to the beginning of a syntactic string."
+  (interactive)
+  (unless (acc/point-in-string-p (point))
+    (error "You must be in a string for this command to work"))
+  (while (acc/point-in-string-p (point))
+    (forward-char -1))
+  (point))
+
+(defun acc/swap-quotes ()
+  "Swap the quote symbols in a \\[python-mode] string."
+  (interactive)
+  (save-excursion
+    (let ((bos (save-excursion
+                 (acc/beginning-of-string)))
+          (eos (save-excursion
+                 (acc/beginning-of-string)
+                 (forward-sexp)
+                 (point)))
+          (replacement-char ?\'))
+      (goto-char bos)
+      ;; if the following character is a single quote then the
+      ;; `replacement-char' should be a double quote.
+      (when (eq (following-char) ?\')
+          (setq replacement-char ?\"))
+      (delete-char 1)
+      (insert replacement-char)
+      (goto-char eos)
+      (delete-char -1)
+      (insert replacement-char))))
 
 ;;; Org-mode customization found at:
 ;;; http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
