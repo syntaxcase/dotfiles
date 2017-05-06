@@ -113,7 +113,6 @@
   (persistent-scratch-setup-default))
 
 (req-package better-shell
-  :ensure t
   :bind
   (("C-'" . better-shell-shell)
    ("C-=" . better-shell-remote-open)))
@@ -201,6 +200,11 @@
   :config
   (projectile-global-mode))
 
+(req-package magit
+  :commands (magit-status projectile-vc)
+  :init
+  (setq magit-completing-read-function 'ivy-completing-read))
+
 (req-package org
   (bind-key* "C-c c" 'org-capture)
   (bind-key* "C-c l" 'org-store-link)
@@ -213,10 +217,17 @@
   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (req-package clojure-mode
-  :defer t
+  :mode (("\\.edn$" . clojure-mode)
+         ("\\.cljs$" . clojurescript-mode)
+         ("\\.cljx$" . clojurex-mode)
+         ("\\.cljc$" . clojurec-mode))
   :init
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+
+(req-package cider
+  :commands (cider cider-connect cider-jack-in)
+  :pin melpa-stable)
 
 (req-package paredit
   :defer t
@@ -235,20 +246,21 @@
   :init
   (setq inferior-lisp-program "/home/acc/bin/sbcl")
   ;; (setq inferior-lisp-program "/home/acc/sw/ccl-1.9/lx86cl -K utf-8")
-  (load (expand-file-name "~/quicklisp/slime-helper.el"))
+  ;(load (expand-file-name "~/quicklisp/slime-helper.el"))
   (setq slime-contribs '(slime-fancy
                          slime-indentation
                          slime-compiler-notes-tree))
 
   ;; CLHS
-  (load (expand-file-name "~/quicklisp/clhs-use-local.el") t))
+  ;(load (expand-file-name "~/quicklisp/clhs-use-local.el") t)
+  )
 
 (req-package haskell-mode
-  :defer t
+  :mode "\\.hs\\'"
   :init (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
 
 (req-package python-mode
-  :defer t
+  :mode "\\.py\\'"
   :init (setq python-shell-interpreter "python3"))
 
 (req-package ensime
@@ -256,6 +268,7 @@
   :pin melpa-stable)
 
 (req-package jedi
+  :require python-mode
   :init
   (add-hook 'python-mode-hook 'jedi:setup)
   (setq jedi:complete-on-dot t))
@@ -269,12 +282,10 @@
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Set path to racer binary
 (req-package racer
+  :defer t
   :init
   ;; Set path to rust src directory
   (setq racer-rust-src-path +rustc-src+))
-
-(req-package rust-mode
-  :init (setq rust-format-on-save t))
 
 (req-package company-racer
   :require (racer company)
@@ -334,7 +345,6 @@
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
 (req-package json-mode
-  :defer t
   :mode "\\.json\\'")
 
 (req-package reftex
@@ -352,7 +362,7 @@
 
 (req-package web-mode
   :require flycheck
-  :defer t
+  :mode "\\.tsx\\'"
   :init
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
@@ -360,7 +370,6 @@
 
 (req-package rjsx-mode
   :require flycheck
-  :defer t
   :mode "\\.jsx\\'")
 
 (req-package flycheck
