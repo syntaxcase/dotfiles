@@ -88,12 +88,6 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;;;; Req packages
-(req-package exec-path-from-shell
-  :ensure t
-  :if (memq window-system '(mac ns x))
-  :config
-  (exec-path-from-shell-initialize))
-
 (req-package solarized-theme
   :init
   (progn
