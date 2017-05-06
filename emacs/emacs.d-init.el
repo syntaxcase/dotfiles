@@ -61,6 +61,9 @@
 ;;;; disable line-wrapping
 (setq-default truncate-lines t)
 
+;;;; default to 100 columns
+(setq-default fill-column 100)
+
 ;;;; Don't use native GTK tooltips
 (setq x-gtk-use-system-tooltips nil)
 
