@@ -4,23 +4,10 @@
 
 ;;; Code:
 ;;; GC every 20MB allocated (instead of the default 0.76MB)
-;;; This is commented out while I test the GC trick below
-; (setq gc-cons-threshold 20000000)
+(setq gc-cons-threshold (* 20 1024 1024))
 
 (defconst +rustc-src+ "/home/acc/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
 
-;;; Stop GCs while in the minibuffer.
-;;; http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
-(defun my-minibuffer-setup-hook ()
-  "Disable garbage collection while in the minibuffer."
-  (setq gc-cons-threshold most-positive-fixnum))
-
-(defun my-minibuffer-exit-hook ()
-  "Re-enable garbage collection when out of the minibuffer."
-  (setq gc-cons-threshold 800000))
-
-(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
-(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file :noerror)
