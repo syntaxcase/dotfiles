@@ -173,13 +173,37 @@
   :bind (("C-." . goto-last-change)
          ("C-," . goto-last-change-reverse)))
 
-(req-package spaceline
-  :init (setq powerline-default-separator 'wave)
+(req-package smartparens
+  :ensure t
+  :demand t
   :config
-  (progn
-    (require 'spaceline-config)
-    (spaceline-emacs-theme)
-    (spaceline-helm-mode)))
+  (req-package smartparens-config)
+  (smartparens-global-mode t)
+  :bind
+  (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
+   ("C-M-f" . sp-forward-sexp)
+   ("C-M-b" . sp-backward-sexp)
+   ("C-M-n" . sp-up-sexp)
+   ("C-M-d" . sp-down-sexp)
+   ("C-M-u" . sp-backward-up-sexp)
+   ("C-M-p" . sp-backward-down-sexp)
+   ("C-M-w" . sp-copy-sexp)
+   ("M-s" . sp-splice-sexp)
+   ("M-r" . sp-splice-sexp-killing-around)
+   ("C-)" . sp-forward-slurp-sexp)
+   ("C-}" . sp-forward-barf-sexp)
+   ("C-(" . sp-backward-slurp-sexp)
+   ("C-{" . sp-backward-barf-sexp)
+   ("M-S" . sp-split-sexp)
+   ("M-J" . sp-join-sexp)
+   ("C-M-t" . sp-transpose-sexp)))
+
+(req-package spaceline
+ :init (setq powerline-default-separator 'wave)
+ :config
+ (progn
+   (require 'spaceline-config)
+   (spaceline-emacs-theme)))
 
 (req-package company
   :init
