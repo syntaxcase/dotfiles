@@ -230,10 +230,30 @@
   (setq magit-completing-read-function 'ivy-completing-read))
 
 (req-package org
-  (bind-key* "C-c c" 'org-capture)
-  (bind-key* "C-c l" 'org-store-link)
-  (bind-key* "C-c a" 'org-agenda)
-  (bind-key* "C-c b" 'org-iswitch))
+  :mode ("\\.org\\'" . org-mode)
+  :bind (("C-c l" . org-store-link)
+         ("C-c c" . org-capture)
+         ("C-c a" . org-agenda)
+         ("C-c b" . org-iswitchb)
+         ("C-c C-w" . org-refile)
+         ("C-c j" . org-clock-goto))
+  :init
+  (setq org-startup-indented nil)
+  (setq org-html-doctype "html5")
+  :config
+  (add-to-list 'org-src-lang-modes '("js" . js2))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (awk . t)
+     (sed . t)
+     (shell . t)
+     (js . t)
+     (python . t))))
+
+(req-package ox-reveal
+  :require org)
 
 (req-package org-bullets
   :require org
