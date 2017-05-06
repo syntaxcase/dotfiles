@@ -98,11 +98,6 @@
   :defer t
   :config (winner-mode 1))
 
-(req-package anzu
-  :defer t
-  :diminish anzu-mode
-  :config (global-anzu-mode +1))
-
 (req-package uniquify
   :defer t
   :config
@@ -128,36 +123,39 @@
   :config (which-key-mode))
 
 (req-package multiple-cursors
-  :defer t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
-(req-package helm
-  :demand
-  :diminish helm-mode
+;; hydra
+(req-package hydra)
+
+;; ivy
+(req-package ivy
+  :ensure t
+  :diminish ivy-mode
+  :require hydra
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-s" . swiper)
+         ("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-x b" . ivy-switch-buffer)
+         ("<f1> f" . counsel-describe-function)
+         ("<f1> v" . counsel-describe-variable)
+         ("<f1> l" . counsel-find-library)
+         ("<f2> i" . counsel-info-lookup-symbol)
+         ("<f2> u" . counsel-unicode-char))
   :init
-  (progn
-    (require 'helm-config)
-    (global-unset-key (kbd "C-x c"))
-    (setq helm-M-x-fuzzy-match                  t
-          helm-bookmark-show-location           t
-          helm-buffers-fuzzy-matching           t
-          helm-completion-in-region-fuzzy-match t
-          helm-file-cache-fuzzy-match           t
-          helm-imenu-fuzzy-match                t
-          helm-mode-fuzzy-match                 t
-          helm-locate-fuzzy-match               t
-          helm-quick-update                     t
-          helm-recentf-fuzzy-match              t
-          helm-semantic-fuzzy-match             t))
-  :bind
-  (("C-c h" . helm-command-prefix)
-   ("M-x" . helm-M-x)
-   ("C-x r b" . helm-filtered-bookmarks)
-   ("C-x C-f" . helm-find-files))
-  :config (helm-mode 1))
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "")
+  (setq ivy-height 10)
+  ;; configure regexp engine.
+  (setq ivy-re-builders-alist
+	;; allow input not in order
+        '((t . ivy--regex-ignore-order)))
+  :config
+  (ivy-mode 1))
 
 (req-package avy
   :bind (("C-c :" . avy-goto-char)
@@ -196,15 +194,12 @@
   :config (global-undo-tree-mode))
 
 (req-package projectile
-  :demand
-  :require helm
   :init
-  (setq projectile-completion-system 'helm)
   (setq projectile-globally-ignored-directories
         '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "node_modules"))
+  (setq projectile-completion-system 'ivy)
   :config
-  (projectile-global-mode)
-  (helm-projectile-on))
+  (projectile-global-mode))
 
 (req-package org
   (bind-key* "C-c c" 'org-capture)
@@ -257,9 +252,8 @@
   :init (setq python-shell-interpreter "python3"))
 
 (req-package ensime
-  :pin melpa-stable
-  :require helm
-  :init (setq ensime-use-helm t))
+  :commands ensime
+  :pin melpa-stable)
 
 (req-package jedi
   :init
@@ -368,12 +362,6 @@
   :require flycheck
   :defer t
   :mode "\\.jsx\\'")
-
-(req-package helm-flycheck
-  :require (helm flycheck)
-  :defer t
-  :bind (:map flycheck-mode-map
-              ("C-c ! l" . helm-flycheck)))
 
 (req-package flycheck
   :init
