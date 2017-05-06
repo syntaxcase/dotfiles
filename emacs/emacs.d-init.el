@@ -340,6 +340,7 @@
 (req-package rust-mode
   :require (company-racer flycheck)
   :mode "\\.rs\\'"
+  :init (setq rust-format-on-save t)
   :config
   (add-hook 'rust-mode-hook
             '(lambda ()
