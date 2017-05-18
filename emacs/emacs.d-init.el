@@ -128,7 +128,8 @@
          ("C-c C-<" . mc/mark-all-like-this)))
 
 ;; hydra
-(req-package hydra)
+(req-package hydra
+  :ensure t)
 
 ;; ivy
 (req-package ivy
@@ -257,7 +258,6 @@
 
 (req-package org-bullets
   :require org
-  :defer t
   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (req-package clojure-mode
@@ -398,7 +398,6 @@
   :init (setq reftex-plug-into-AUCTeX t))
 
 (req-package js2-mode
-  :require flycheck
   :mode "\\.js\\'"
   :interpreter "node"
   :init
@@ -416,7 +415,6 @@
               (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
 
 (req-package web-mode
-  :require flycheck
   :mode "\\.tsx\\'"
   :init
   (setq web-mode-code-indent-offset 2)
@@ -424,7 +422,6 @@
   (setq web-mode-markup-indent-offset 2))
 
 (req-package rjsx-mode
-  :require flycheck
   :mode "\\.jsx\\'")
 
 (req-package flycheck
