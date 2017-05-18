@@ -239,10 +239,19 @@
          ("C-c C-w" . org-refile)
          ("C-c j" . org-clock-goto))
   :init
-  (setq org-startup-indented nil)
+;  (setq org-adapt-indentation nil)
+  (setq org-startup-indented t)
   (setq org-html-doctype "html5")
   :config
+  (require 'ox-deck)
   (add-to-list 'org-src-lang-modes '("js" . js2))
+  (add-to-list 'org-src-lang-modes '("deck-js" . js2))
+
+  (defvar org-babel-default-header-args:deck-js
+    '((:results . "html")
+      (:exports . "results")))
+  (defun org-babel-execute:deck-js (body _params)
+    (format "<code class=\"javascript\">\n%s\n</code>" body))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
