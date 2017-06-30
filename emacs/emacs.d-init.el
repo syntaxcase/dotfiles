@@ -365,10 +365,12 @@ SCHEDULED: %t")))
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Set path to racer binary
 (req-package racer
-  :defer t
   :init
   ;; Set path to rust src directory
-  (setq racer-rust-src-path +rustc-src+))
+  (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
+  (setq racer-rust-src-path +rustc-src+)
+  :config
+  (add-hook 'racer-mode-hook #'eldoc-mode))
 
 (req-package company-racer
   :require (racer company)
@@ -381,25 +383,8 @@ SCHEDULED: %t")))
   :mode "\\.rs\\'"
   :init (setq rust-format-on-save t)
   :config
-  (add-hook 'rust-mode-hook
-            '(lambda ()
-               ;; Enable racer
-               (racer-activate)
-
-               ;; Hook in racer with eldoc to provide documentation
-               (racer-turn-on-eldoc)
-
-               ;; Use flycheck-rust in rust-mode
-               (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-
-               ;; Use company-racer in rust mode
-               (set (make-local-variable 'company-backends) '(company-racer))
-
-               ;; Key binding to jump to method definition
-               (local-set-key (kbd "M-.") #'racer-find-definition)
-
-               ;; Key binding to auto complete and indent
-               (local-set-key (kbd "TAB") #'company-indent-or-complete-common))))
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (req-package flyspell
   :defer t
