@@ -253,9 +253,22 @@
          ("C-c C-w" . org-refile)
          ("C-c j" . org-clock-goto))
   :init
-;  (setq org-adapt-indentation nil)
+  (setq org-confirm-babel-evaluate nil)
   (setq org-startup-indented t)
   (setq org-html-doctype "html5")
+
+  (setq org-log-done 'time)
+
+  (setq org-agenda-files '("~/src/org-mode/"))
+  (setq org-capture-templates
+        '(("t" "acc TODO task format." entry
+           (file "~/src/org-mode/todo.org")
+           "* TODO %?
+SCHEDULED: %t")))
+
+  (setq org-todo-keywords
+        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+
   :config
   (require 'ox-deck)
   (add-to-list 'org-src-lang-modes '("js" . js2))
@@ -264,8 +277,11 @@
   (defvar org-babel-default-header-args:deck-js
     '((:results . "html")
       (:exports . "results")))
-  (defun org-babel-execute:deck-js (body _params)
-    (format "<code class=\"javascript\">\n%s\n</code>" body))
+  (defun org-babel-execute:deck-js (body params)
+    (let ((ext-lib (assoc :data-external-libs params)))
+      (if ext-lib
+          (format "<code class=\"javascript\" data-external-libs=\"%s\">\n%s\n</code>" (cdr ext-lib) body)
+          (format "<code class=\"javascript\">\n%s\n</code>" body))))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
