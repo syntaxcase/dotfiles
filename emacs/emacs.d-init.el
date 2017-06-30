@@ -421,7 +421,10 @@ SCHEDULED: %t")))
   :defer t
   :init (setq reftex-plug-into-AUCTeX t))
 
+(req-package prettier-js)
+
 (req-package js2-mode
+  :require prettier-js
   :mode "\\.js\\'"
   :interpreter "node"
   :init
@@ -436,7 +439,9 @@ SCHEDULED: %t")))
 
   (add-hook 'js2-mode-hook
             (lambda ()
-              (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+              (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
+
+  (add-hook 'js2-mode-hook #'prettier-js-mode))
 
 (req-package web-mode
   :mode "\\.tsx\\'"
