@@ -127,6 +127,10 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
+;; ace-window
+(req-package ace-window
+  :bind ("M-p" . ace-window))
+
 ;; hydra
 (req-package hydra
   :ensure t)
