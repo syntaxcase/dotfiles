@@ -156,7 +156,7 @@
   (setq ivy-height 10)
   ;; configure regexp engine.
   (setq ivy-re-builders-alist
-	;; allow input not in order
+        ;; allow input not in order
         '((t . ivy--regex-ignore-order)))
   :config
   (ivy-mode 1))
