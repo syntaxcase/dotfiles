@@ -483,30 +483,30 @@ SCHEDULED: %t")))
              ("C-x C-e" . alchemist-iex-send-current-line)))
 
 ;;; Typescript
-(req-package tide
-  :require (flycheck company web-mode)
-  :preface (defun setup-tide-mode ()
-             (interactive)
-             (message "Setting up tide mode")
-             (tide-setup)
-             (turn-on-eldoc-mode)
-;             (tide-hl-identifier-mode +1)
-             )
-  :init
-  (setq typescript-indent-level 2)
-  (setq tide-format-options '(:indentSize 2 :tabSize 2))
+;; (req-package tide
+;;   :require (flycheck company web-mode)
+;;   :preface (defun setup-tide-mode ()
+;;              (interactive)
+;;              (message "Setting up tide mode")
+;;              (tide-setup)
+;;              (turn-on-eldoc-mode)
+;; ;             (tide-hl-identifier-mode +1)
+;;              )
+;;   :init
+;;   (setq typescript-indent-level 2)
+;;   (setq tide-format-options '(:indentSize 2 :tabSize 2))
 
-  :config
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (when (string-equal "tsx" (file-name-extension buffer-file-name))
-                (setup-tide-mode))))
+;;   :config
+;;   (add-hook 'web-mode-hook
+;;             (lambda ()
+;;               (when (string-equal "tsx" (file-name-extension buffer-file-name))
+;;                 (setup-tide-mode))))
 
-  (add-hook 'tide-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'tide-format-before-save)))
+;;   (add-hook 'tide-mode-hook
+;;             (lambda ()
+;;               (add-hook 'before-save-hook 'tide-format-before-save)))
 
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+;;   (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
 (req-package-finish)
 
