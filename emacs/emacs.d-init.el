@@ -151,13 +151,16 @@
          ("<f2> u" . counsel-unicode-char))
   :init
   (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "")
+  (setq ivy-count-format "%d/%d ")
   (setq ivy-height 10)
   ;; configure regexp engine.
   (setq ivy-re-builders-alist
         ;; allow input not in order
         '((t . ivy--regex-ignore-order)))
+  (setq counsel-grep-base-command
+        "rg -i -M 200 --no-heading --line-number --color never '%s' %s")
   :config
+  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
   (ivy-mode 1))
 
 (req-package avy
