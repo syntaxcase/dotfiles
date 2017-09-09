@@ -312,6 +312,11 @@ SCHEDULED: %t")))
 
 (req-package cider
   :commands (cider cider-connect cider-jack-in)
+  :init
+  (setq cider-cljs-lein-repl
+        "(do (require 'figwheel-sidecar.repl-api)
+           (figwheel-sidecar.repl-api/start-figwheel!)
+           (figwheel-sidecar.repl-api/cljs-repl))")
   :pin melpa-stable)
 
 (req-package paredit
