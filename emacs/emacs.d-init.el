@@ -88,11 +88,10 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;;;; Req packages
-(req-package solarized-theme
+(req-package base16-theme
+  :ensure t
   :init
-  (progn
-    (setq x-underline-at-descent-line t)
-    (load-theme 'solarized-dark t)))
+  (load-theme 'base16-ocean t))
 
 (req-package winner
   :defer t
