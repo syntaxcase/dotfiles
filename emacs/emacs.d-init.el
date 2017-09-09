@@ -355,7 +355,15 @@ SCHEDULED: %t")))
 
 (req-package ensime
   :commands ensime
-  :pin melpa-stable)
+  :pin melpa)
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :pin melpa)
+
+(use-package scala-mode
+  :mode "\\.scala\\'"
+  :pin melpa)
 
 (req-package jedi
   :require python-mode
