@@ -48,6 +48,9 @@
 (setq visible-bell t)
 (setq create-lockfiles nil)
 
+;; Stretch cursor to cover long characters (like TABs)
+(setq x-stretch-cursor t)
+
 ;;; paste from mouse where the point is, not where the mouse pointer is
 (setq mouse-yank-at-point t)
 
