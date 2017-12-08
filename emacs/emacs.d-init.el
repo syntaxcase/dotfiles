@@ -218,13 +218,6 @@
    ("M-J" . sp-join-sexp)
    ("C-M-t" . sp-transpose-sexp)))
 
-(req-package spaceline
- :init (setq powerline-default-separator 'wave)
- :config
- (progn
-   (require 'spaceline-config)
-   (spaceline-emacs-theme)))
-
 (req-package company
   :init
   (setq company-idle-delay 0.2)
