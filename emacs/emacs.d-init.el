@@ -223,6 +223,7 @@
   (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
+  (setq company-dabbrev-downcase nil)
   :config (global-company-mode))
 
 (req-package undo-tree
