@@ -230,6 +230,17 @@
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
+(use-package hl-anything
+  :ensure t
+  :diminish hl-highlight-mode
+  :commands hl-highlight-mode
+  :init
+  (global-set-key (kbd "<f7> <f7>") 'hl-highlight-thingatpt-local)
+  (global-set-key (kbd "<f7> u") 'hl-unhighlight-all-local)
+  (global-set-key (kbd "<f7> U") 'hl-unhighlight-all-global)
+  (global-set-key (kbd "<f7> n") 'hl-find-next-thing)
+  (global-set-key (kbd "<f7> p") 'hl-find-prev-thing))
+
 (req-package projectile
   :init
   (setq projectile-globally-ignored-directories
