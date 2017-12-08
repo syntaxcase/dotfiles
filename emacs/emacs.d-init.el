@@ -21,9 +21,10 @@
 (setq package-enable-at-startup nil)
 (package-initialize)
 
-(unless (package-installed-p 'req-package)
-  (package-install 'req-package))
-(require 'req-package)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-verbose t)
 
 (set-face-attribute 'default nil :font "Ubuntu Mono" :height 138)
 
@@ -91,16 +92,16 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;;;; Req packages
-(req-package base16-theme
+(use-package base16-theme
   :ensure t
   :init
   (load-theme 'base16-ocean t))
 
-(req-package winner
+(use-package winner
   :defer t
   :config (winner-mode 1))
 
-(req-package uniquify
+(use-package uniquify
   :defer t
   :config
   (setq uniquify-buffer-name-style 'forward)
@@ -110,38 +111,37 @@
   ; don't muck with special buffers
   (setq uniquify-ignore-buffers-re "^\\*"))
 
-(req-package persistent-scratch
+(use-package persistent-scratch
   :config
   (persistent-scratch-setup-default))
 
-(req-package better-shell
+(use-package better-shell
   :bind
   (("C-'" . better-shell-shell)
    ("C-=" . better-shell-remote-open)))
 
-(req-package which-key
+(use-package which-key
   :diminish which-key-mode
   :config (which-key-mode))
 
-(req-package multiple-cursors
+(use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
 ;; ace-window
-(req-package ace-window
+(use-package ace-window
   :bind ("M-p" . ace-window))
 
 ;; hydra
-(req-package hydra
+(use-package hydra
   :ensure t)
 
 ;; ivy
-(req-package ivy
+(use-package ivy
   :ensure t
   :diminish ivy-mode
-  :require hydra
   :bind (("C-c C-r" . ivy-resume)
          ("C-s" . swiper)
          ("M-x" . counsel-M-x)
@@ -166,19 +166,19 @@
   (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
   (ivy-mode 1))
 
-(req-package avy
+(use-package avy
   :bind (("C-c :" . avy-goto-char)
          ("C-c '" . avy-goto-char-2)
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
 
-(req-package volatile-highlights
+(use-package volatile-highlights
   :config
   (volatile-highlights-mode t))
 
-(req-package iedit)
+(use-package iedit)
 
-(req-package dumb-jump
+(use-package dumb-jump
   :ensure t
   :bind (("M-g o" . dumb-jump-go-other-window)
          ("M-g j" . dumb-jump-go)
@@ -188,16 +188,16 @@
          ("M-g z" . dumb-jump-go-prefer-external-other-window))
   :config (setq dumb-jump-selector 'ivy))
 
-(req-package goto-chg
+(use-package goto-chg
   :commands goto-last-change
   :bind (("C-." . goto-last-change)
          ("C-," . goto-last-change-reverse)))
 
-(req-package smartparens
+(use-package smartparens
   :ensure t
   :demand t
   :config
-  (req-package smartparens-config)
+  (use-package smartparens-config)
   (smartparens-global-mode t)
   :bind
   (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
@@ -218,15 +218,26 @@
    ("M-J" . sp-join-sexp)
    ("C-M-t" . sp-transpose-sexp)))
 
-(req-package company
+(use-package company-jedi)
+
+(use-package company-racer
+  :config
+  (add-to-list 'company-backend 'company-racer))
+
+(use-package company
   :init
   (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
   (setq company-dabbrev-downcase nil)
-  :config (global-company-mode))
+  :config
+  (global-company-mode)
 
-(req-package undo-tree
+  (defun my/python-mode-hook ()
+    (add-to-list 'company-backends 'company-jedi))
+  (add-hook 'python-mode-hook 'my/python-mode-hook))
+
+(use-package undo-tree
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
@@ -241,20 +252,20 @@
   (global-set-key (kbd "<f7> n") 'hl-find-next-thing)
   (global-set-key (kbd "<f7> p") 'hl-find-prev-thing))
 
-(req-package projectile
+(use-package projectile
   :init
   (setq projectile-globally-ignored-directories
         '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "node_modules"))
   (setq projectile-completion-system 'ivy)
   :config
-  (projectile-global-mode))
+  (projectile-mode))
 
-(req-package magit
+(use-package magit
   :commands (magit-status projectile-vc)
   :init
   (setq magit-completing-read-function 'ivy-completing-read))
 
-(req-package org
+(use-package org
   :mode ("\\.org\\'" . org-mode)
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
@@ -300,16 +311,14 @@ SCHEDULED: %t")))
      (sed . t)
      (shell . t)
      (js . t)
-     (python . t))))
+     (python . t)))
 
-(req-package ox-reveal
-  :require org)
+  (use-package ox-reveal)
 
-(req-package org-bullets
-  :require org
-  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  (use-package org-bullets
+    :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
 
-(req-package clojure-mode
+(use-package clojure-mode
   :mode (("\\.edn$" . clojure-mode)
          ("\\.cljs$" . clojurescript-mode)
          ("\\.cljx$" . clojurex-mode)
@@ -318,7 +327,7 @@ SCHEDULED: %t")))
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
-(req-package cider
+(use-package cider
   :commands (cider cider-connect cider-jack-in)
   :init
   (setq cider-cljs-lein-repl
@@ -327,7 +336,7 @@ SCHEDULED: %t")))
            (figwheel-sidecar.repl-api/cljs-repl))")
   :pin melpa-stable)
 
-(req-package paredit
+(use-package paredit
   :defer t
   :init
   (let ((h (lambda ()
@@ -339,7 +348,7 @@ SCHEDULED: %t")))
     (add-hook 'scheme-mode-hook h)
     (add-hook 'clojure-mode-hook h)))
 
-(req-package slime
+(use-package slime
   :defer t
   :init
   (setq inferior-lisp-program "/home/acc/bin/sbcl")
@@ -353,15 +362,15 @@ SCHEDULED: %t")))
   ;(load (expand-file-name "~/quicklisp/clhs-use-local.el") t)
   )
 
-(req-package haskell-mode
+(use-package haskell-mode
   :mode "\\.hs\\'"
   :init (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
 
-(req-package python-mode
+(use-package python-mode
   :mode "\\.py\\'"
   :init (setq python-shell-interpreter "python3"))
 
-(req-package ensime
+(use-package ensime
   :commands ensime
   :pin melpa)
 
@@ -373,43 +382,27 @@ SCHEDULED: %t")))
   :mode "\\.scala\\'"
   :pin melpa)
 
-(req-package jedi
-  :require python-mode
-  :init
-  (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t))
-
-(req-package company-jedi
-  :require (company jedi)
-  :config
-  (add-to-list 'company-backend 'company-jedi))
-
 ;;;; Rust stuff
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
-;; Set path to racer binary
-(req-package racer
-  :init
-  ;; Set path to rust src directory
-  (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
-  (setq racer-rust-src-path +rustc-src+)
-  :config
-  (add-hook 'racer-mode-hook #'eldoc-mode))
-
-(req-package company-racer
-  :require (racer company)
-  :config
-  (add-to-list 'company-backend 'company-racer))
-
 ;; Setting up configurations when you load rust-mode
-(req-package rust-mode
-  :require (company-racer flycheck)
+(use-package rust-mode
   :mode "\\.rs\\'"
-  :init (setq rust-format-on-save t)
+  :init
+  (setq rust-format-on-save t)
+
   :config
-  (add-hook 'rust-mode-hook #'racer-mode)
+  (use-package racer
+    :init
+    ;; Set path to rust src directory
+    (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
+    (setq racer-rust-src-path +rustc-src+)
+    :config
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'rust-mode-hook #'racer-mode))
+
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-(req-package flyspell
+(use-package flyspell
   :defer t
   :init
   (setq flyspell-issue-welcome-flag nil)
@@ -419,9 +412,7 @@ SCHEDULED: %t")))
   ;; I don't want flyspell-auto-correct-word bound to C-M-i, C-. is enough.
   (define-key flyspell-mode-map (kbd "C-M-i") nil))
 
-(req-package auctex
-  :defer t
-  :require flyspell
+(use-package auctex
   :mode ("\\.tex\\'" . latex-mode)
   :init
   (setq TeX-auto-save t)
@@ -434,20 +425,15 @@ SCHEDULED: %t")))
   (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
-(req-package json-mode
+  (use-package reftex
+    :init (setq reftex-plug-into-AUCTeX t)))
+
+(use-package json-mode
   :mode "\\.json\\'")
 
-(req-package reftex
-  :require auctex
-  :defer t
-  :init (setq reftex-plug-into-AUCTeX t))
-
-(req-package prettier-js)
-
-(req-package js2-mode
-  :require prettier-js
+(use-package js2-mode
   :mode "\\.js\\'"
   :interpreter "node"
   :init
@@ -462,21 +448,19 @@ SCHEDULED: %t")))
 
   (add-hook 'js2-mode-hook
             (lambda ()
-              (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
+              (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
 
-  (add-hook 'js2-mode-hook #'prettier-js-mode))
-
-(req-package web-mode
+(use-package web-mode
   :mode "\\.tsx\\'"
   :init
   (setq web-mode-code-indent-offset 2)
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-markup-indent-offset 2))
 
-(req-package rjsx-mode
+(use-package rjsx-mode
   :mode "\\.jsx\\'")
 
-(req-package flycheck
+(use-package flycheck
   :init
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   :config
@@ -485,13 +469,13 @@ SCHEDULED: %t")))
   (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
 ;; Set up the basic Elixir mode.
-(req-package elixir-mode
+(use-package elixir-mode
   :commands elixir-mode
   :config
   (add-hook 'elixir-mode-hook 'alchemist-mode))
 
 ;; Alchemist offers integration with the Mix tool.
-(req-package alchemist
+(use-package alchemist
   :commands alchemist-mode
   :init
   (setq alchemist-goto-elixir-source-dir "/home/acc/src/upstream/elixir")
@@ -530,8 +514,6 @@ SCHEDULED: %t")))
 ;;               (add-hook 'before-save-hook 'tide-format-before-save)))
 
 ;;   (add-hook 'typescript-mode-hook #'setup-tide-mode))
-
-(req-package-finish)
 
 ;;;; My utility functions!
 (defun acc/point-in-string-p (pt)
