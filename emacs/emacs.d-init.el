@@ -182,6 +182,12 @@
   :config
   (volatile-highlights-mode t))
 
+(use-package fic-mode
+  :ensure t
+  :commands fic-mode
+  :init
+  (add-hook 'prog-mode-hook 'fic-mode))
+
 (use-package iedit)
 
 (use-package dumb-jump
