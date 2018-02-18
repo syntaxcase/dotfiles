@@ -4,7 +4,8 @@
 
 ;;; Code:
 ;;; GC every 20MB allocated (instead of the default 0.76MB)
-(setq gc-cons-threshold (* 20 1024 1024))
+;(setq +old-gc-cons-threshold+ gc-cons-threshold)
+;(setq gc-cons-threshold (* 20 1024 1024))
 
 (defconst +rustc-src+ "/home/acc/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
 
