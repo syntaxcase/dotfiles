@@ -124,6 +124,12 @@
   :diminish which-key-mode
   :config (which-key-mode))
 
+(use-package helpful
+  :ensure t
+  :bind (("C-h f" . helpful-callable)
+         ("C-h k" . helpful-key)
+         ("C-h v" . helpful-variable)))
+
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
