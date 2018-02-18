@@ -48,7 +48,6 @@
 (setq column-number-mode t)
 (show-paren-mode t)
 (setq visible-bell t)
-(setq create-lockfiles nil)
 
 ;; Stretch cursor to cover long characters (like TABs)
 (setq x-stretch-cursor t)
