@@ -186,8 +186,7 @@
 (use-package fic-mode
   :ensure t
   :commands fic-mode
-  :init
-  (add-hook 'prog-mode-hook 'fic-mode))
+  :hook (prog-mode))
 
 (use-package iedit)
 
