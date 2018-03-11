@@ -230,12 +230,6 @@
    ("M-J" . sp-join-sexp)
    ("C-M-t" . sp-transpose-sexp)))
 
-(use-package company-jedi)
-
-(use-package company-racer
-  :config
-  (add-to-list 'company-backend 'company-racer))
-
 (use-package company
   :defer 2
   :ensure t
@@ -245,18 +239,24 @@
   (setq company-tooltip-align-annotations t)
   (setq company-dabbrev-downcase nil)
   :config
-  (global-company-mode)
+  (global-company-mode))
 
-  (defun my/python-mode-hook ()
-    (add-to-list 'company-backends 'company-jedi))
-  (add-hook 'python-mode-hook 'my/python-mode-hook)
+(use-package company-quickhelp
+  :after (company)
+  :ensure t
+  :bind (:map company-active-map
+              ("C-c h" . #'company-quickhelp-manual-begin))
+  :config
+  (company-quickhelp-mode 1))
 
-  (use-package company-quickhelp
-    :ensure t
-    :bind (:map company-active-map
-                ("C-c h" . #'company-quickhelp-manual-begin))
-    :config
-    (company-quickhelp-mode 1)))
+(use-package company-jedi
+  :after (company)
+  :config (add-to-list 'company-backends 'company-jedi))
+
+(use-package company-racer
+  :after (company)
+  :config
+  (add-to-list 'company-backends 'company-racer))
 
 (use-package undo-tree
   :diminish undo-tree-mode
@@ -342,12 +342,14 @@ SCHEDULED: %t")))
      (sed . t)
      (shell . t)
      (js . t)
-     (python . t)))
+     (python . t))))
 
-  (use-package ox-reveal)
+(use-package ox-reveal
+  :after (org))
 
-  (use-package org-bullets
-    :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))))
+(use-package org-bullets
+  :after (org)
+  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package clojure-mode
   :mode (("\\.edn$" . clojure-mode)
@@ -422,16 +424,17 @@ SCHEDULED: %t")))
   (setq rust-format-on-save t)
 
   :config
-  (use-package racer
-    :init
-    ;; Set path to rust src directory
-    (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
-    (setq racer-rust-src-path +rustc-src+)
-    :config
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'rust-mode-hook #'racer-mode))
-
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(use-package racer
+  :after (rust-mode)
+  :init
+  ;; Set path to rust src directory
+  (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
+  (setq racer-rust-src-path +rustc-src+)
+  :config
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'rust-mode-hook #'racer-mode))
 
 (use-package flyspell
   :defer t
@@ -456,10 +459,11 @@ SCHEDULED: %t")))
   (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
-  (use-package reftex
-    :init (setq reftex-plug-into-AUCTeX t)))
+(use-package reftex
+  :after (auctex)
+  :init (setq reftex-plug-into-AUCTeX t))
 
 (use-package json-mode
   :mode "\\.json\\'")
@@ -502,13 +506,13 @@ SCHEDULED: %t")))
 
 ;; Set up the basic Elixir mode.
 (use-package elixir-mode
-  :commands elixir-mode
-  :config
-  (add-hook 'elixir-mode-hook 'alchemist-mode))
+  :commands elixir-mode)
 
 ;; Alchemist offers integration with the Mix tool.
 (use-package alchemist
+  :after (elixir-mode)
   :commands alchemist-mode
+  :hook (elixir-mode)
   :init
   (setq alchemist-goto-elixir-source-dir "/home/acc/src/upstream/elixir")
   (setq alchemist-goto-erlang-source-dir "/home/acc/src/upstream/otp_src_19.2")
