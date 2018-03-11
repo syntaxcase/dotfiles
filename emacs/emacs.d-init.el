@@ -399,9 +399,9 @@ SCHEDULED: %t")))
   :mode "\\.hs\\'"
   :init (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
 
-(use-package python-mode
-  :mode "\\.py\\'"
-  :init (setq python-shell-interpreter "python3"))
+(use-package python
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode))
 
 (use-package ensime
   :commands ensime
