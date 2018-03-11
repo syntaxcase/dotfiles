@@ -179,6 +179,7 @@
   :config (avy-setup-default))
 
 (use-package volatile-highlights
+  :defer 3
   :config
   (volatile-highlights-mode t))
 
@@ -237,6 +238,7 @@
   (add-to-list 'company-backend 'company-racer))
 
 (use-package company
+  :defer 2
   :ensure t
   :init
   (setq company-idle-delay 0.2)
@@ -273,6 +275,7 @@
   (global-set-key (kbd "<f7> p") 'hl-find-prev-thing))
 
 (use-package projectile
+  :defer 1
   :init
   (setq projectile-globally-ignored-directories
         '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "node_modules"))
@@ -490,6 +493,7 @@ SCHEDULED: %t")))
   :mode "\\.jsx\\'")
 
 (use-package flycheck
+  :defer 2
   :init
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   :config
