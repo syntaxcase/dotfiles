@@ -112,6 +112,7 @@
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package persistent-scratch
+  :ensure t
   :config
   (persistent-scratch-setup-default))
 
@@ -121,6 +122,7 @@
    ("C-=" . better-shell-remote-open)))
 
 (use-package which-key
+  :ensure t
   :diminish which-key-mode
   :config (which-key-mode))
 
@@ -188,7 +190,8 @@
   :commands fic-mode
   :hook (prog-mode))
 
-(use-package iedit)
+(use-package iedit
+  :ensure t)
 
 (use-package dumb-jump
   :ensure t
@@ -250,15 +253,18 @@
   (company-quickhelp-mode 1))
 
 (use-package company-jedi
+  :ensure t
   :after (company)
   :config (add-to-list 'company-backends 'company-jedi))
 
 (use-package company-racer
+  :ensure t
   :after (company)
   :config
   (add-to-list 'company-backends 'company-racer))
 
 (use-package undo-tree
+  :ensure t
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
@@ -345,9 +351,11 @@ SCHEDULED: %t")))
      (python . t))))
 
 (use-package ox-reveal
+  :ensure t
   :after (org))
 
 (use-package org-bullets
+  :ensure t
   :after (org)
   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
