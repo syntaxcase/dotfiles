@@ -120,6 +120,7 @@
   (persistent-scratch-setup-default))
 
 (use-package better-shell
+  :ensure t
   :bind
   (("C-'" . better-shell-shell)
    ("C-=" . better-shell-remote-open)))
@@ -136,6 +137,7 @@
          ("C-h v" . helpful-variable)))
 
 (use-package multiple-cursors
+  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -143,6 +145,7 @@
 
 ;; ace-window
 (use-package ace-window
+  :ensure t
   :bind ("M-p" . ace-window))
 
 ;; hydra
@@ -216,6 +219,7 @@
   :config (setq dumb-jump-selector 'ivy))
 
 (use-package goto-chg
+  :ensure t
   :commands goto-last-change
   :bind (("C-." . goto-last-change)
          ("C-," . goto-last-change-reverse)))
@@ -317,6 +321,7 @@
     :commands (all-the-icons-dired-mode)))
 
 (use-package org
+  :ensure t
   :mode ("\\.org\\'" . org-mode)
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
@@ -374,6 +379,7 @@ SCHEDULED: %t")))
  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package clojure-mode
+  :ensure t
   :mode (("\\.edn$" . clojure-mode)
          ("\\.cljs$" . clojurescript-mode)
          ("\\.cljx$" . clojurex-mode)
@@ -383,6 +389,7 @@ SCHEDULED: %t")))
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package cider
+  :ensure t
   :commands (cider cider-connect cider-jack-in)
   :init
   (setq cider-cljs-lein-repl
@@ -405,6 +412,7 @@ SCHEDULED: %t")))
     (add-hook 'clojure-mode-hook h)))
 
 (use-package slime
+  :ensure t
   :defer t
   :init
   (setq inferior-lisp-program "/home/acc/bin/sbcl")
@@ -419,22 +427,27 @@ SCHEDULED: %t")))
   )
 
 (use-package haskell-mode
+  :ensure t
   :mode "\\.hs\\'"
   :init (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
 
 (use-package python
+  :ensure t
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode))
 
 (use-package ensime
+  :ensure t
   :commands ensime
   :pin melpa)
 
 (use-package sbt-mode
+  :ensure t
   :commands sbt-start sbt-command
   :pin melpa)
 
 (use-package scala-mode
+  :ensure t
   :mode "\\.scala\\'"
   :pin melpa)
 
@@ -442,6 +455,7 @@ SCHEDULED: %t")))
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Setting up configurations when you load rust-mode
 (use-package rust-mode
+  :ensure t
   :mode "\\.rs\\'"
   :init
   (setq rust-format-on-save t)
@@ -450,6 +464,7 @@ SCHEDULED: %t")))
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package racer
+  :ensure t
   :after (rust-mode)
   :init
   ;; Set path to rust src directory
@@ -460,6 +475,7 @@ SCHEDULED: %t")))
   (add-hook 'rust-mode-hook #'racer-mode))
 
 (use-package flyspell
+  :ensure t
   :defer t
   :init
   (setq flyspell-issue-welcome-flag nil)
@@ -470,6 +486,7 @@ SCHEDULED: %t")))
   (define-key flyspell-mode-map (kbd "C-M-i") nil))
 
 (use-package auctex
+  :ensure t
   :mode ("\\.tex\\'" . latex-mode)
   :init
   (setq TeX-auto-save t)
@@ -485,13 +502,16 @@ SCHEDULED: %t")))
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
 (use-package reftex
+  :ensure t
   :after (auctex)
   :init (setq reftex-plug-into-AUCTeX t))
 
 (use-package json-mode
+  :ensure t
   :mode "\\.json\\'")
 
 (use-package js2-mode
+  :ensure t
   :mode "\\.js\\'"
   :interpreter "node"
   :init
@@ -509,6 +529,7 @@ SCHEDULED: %t")))
               (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
 
 (use-package web-mode
+  :ensure t
   :mode "\\.tsx\\'"
   :init
   (setq web-mode-code-indent-offset 2)
@@ -516,9 +537,11 @@ SCHEDULED: %t")))
   (setq web-mode-markup-indent-offset 2))
 
 (use-package rjsx-mode
+  :ensure t
   :mode "\\.jsx\\'")
 
 (use-package flycheck
+  :ensure t
   :defer 2
   :init
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
@@ -529,10 +552,12 @@ SCHEDULED: %t")))
 
 ;; Set up the basic Elixir mode.
 (use-package elixir-mode
+  :ensure t
   :commands elixir-mode)
 
 ;; Alchemist offers integration with the Mix tool.
 (use-package alchemist
+  :ensure t
   :after (elixir-mode)
   :commands alchemist-mode
   :hook (elixir-mode)
