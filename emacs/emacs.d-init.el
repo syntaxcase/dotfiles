@@ -151,7 +151,18 @@
 
 ;; counsel
 (use-package counsel
-  :ensure t)
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("M-y" . counsel-yank-pop)
+         ("C-s" . swiper)
+         ("C-x C-f" . counsel-find-file)
+         ("<f1> f" . counsel-describe-function)
+         ("<f1> v" . counsel-describe-variable)
+         ("<f1> l" . counsel-find-library)
+         ("<f2> i" . counsel-info-lookup-symbol)
+         ("<f2> u" . counsel-unicode-char))
+  :config
+  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper))
 
 ;; ivy
 (use-package ivy
@@ -159,15 +170,7 @@
   :after (counsel)
   :diminish ivy-mode
   :bind (("C-c C-r" . ivy-resume)
-         ("C-s" . swiper)
-         ("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x b" . ivy-switch-buffer)
-         ("<f1> f" . counsel-describe-function)
-         ("<f1> v" . counsel-describe-variable)
-         ("<f1> l" . counsel-find-library)
-         ("<f2> i" . counsel-info-lookup-symbol)
-         ("<f2> u" . counsel-unicode-char))
+         ("C-x b" . ivy-switch-buffer))
   :init
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "%d/%d ")
@@ -179,7 +182,6 @@
   (setq counsel-grep-base-command
         "rg -i -M 200 --no-heading --line-number --color never '%s' %s")
   :config
-  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
   (ivy-mode 1))
 
 (use-package avy
