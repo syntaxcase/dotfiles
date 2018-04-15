@@ -27,7 +27,10 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
-(set-face-attribute 'default nil :font "Ubuntu Mono" :height 138)
+;;; font selection
+(if (eq system-type 'darwin)
+    (set-face-attribute 'default nil :font "Monaco-16")
+  (set-face-attribute 'default nil :font "Ubuntu Mono" :height 138))
 
 ;;;; emacs confirm closing
 (setq confirm-kill-emacs 'yes-or-no-p)
