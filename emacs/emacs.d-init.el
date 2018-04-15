@@ -292,6 +292,7 @@
   (global-set-key (kbd "<f7> p") 'hl-find-prev-thing))
 
 (use-package projectile
+  :ensure t
   :defer 1
   :init
   (setq projectile-globally-ignored-directories
@@ -301,6 +302,7 @@
   (projectile-mode))
 
 (use-package magit
+  :ensure t
   :commands (magit-status projectile-vc)
   :init
   (setq magit-completing-read-function 'ivy-completing-read))
@@ -363,13 +365,13 @@ SCHEDULED: %t")))
      (python . t))))
 
 (use-package ox-reveal
-  :ensure t
-  :after (org))
+ :ensure t
+ :after (org))
 
 (use-package org-bullets
-  :ensure t
-  :after (org)
-  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ :ensure t
+ :after (org)
+ :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package clojure-mode
   :mode (("\\.edn$" . clojure-mode)
@@ -390,6 +392,7 @@ SCHEDULED: %t")))
   :pin melpa-stable)
 
 (use-package paredit
+  :ensure t
   :defer t
   :init
   (let ((h (lambda ()
