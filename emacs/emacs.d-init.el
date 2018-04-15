@@ -180,12 +180,14 @@
   (ivy-mode 1))
 
 (use-package avy
+  :ensure t
   :bind (("C-c :" . avy-goto-char)
          ("C-c '" . avy-goto-char-2)
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
 
 (use-package volatile-highlights
+  :ensure t
   :defer 3
   :config
   (volatile-highlights-mode t))
