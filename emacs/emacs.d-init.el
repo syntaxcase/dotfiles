@@ -146,9 +146,14 @@
 (use-package hydra
   :ensure t)
 
+;; counsel
+(use-package counsel
+  :ensure t)
+
 ;; ivy
 (use-package ivy
   :ensure t
+  :after (counsel)
   :diminish ivy-mode
   :bind (("C-c C-r" . ivy-resume)
          ("C-s" . swiper)
