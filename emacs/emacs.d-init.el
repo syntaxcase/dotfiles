@@ -347,6 +347,7 @@ SCHEDULED: %t")))
         '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
 
   :config
+  (require 'ox-deck)
   (add-to-list 'org-src-lang-modes '("js" . js2))
   (add-to-list 'org-src-lang-modes '("deck-js" . js2))
 
