@@ -321,7 +321,7 @@
     :commands (all-the-icons-dired-mode)))
 
 (use-package org
-  :ensure t
+  :ensure org-plus-contrib
   :mode ("\\.org\\'" . org-mode)
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
@@ -347,13 +347,13 @@ SCHEDULED: %t")))
         '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
 
   :config
-  (require 'ox-deck)
   (add-to-list 'org-src-lang-modes '("js" . js2))
   (add-to-list 'org-src-lang-modes '("deck-js" . js2))
 
   (defvar org-babel-default-header-args:deck-js
     '((:results . "html")
       (:exports . "results")))
+
   (defun org-babel-execute:deck-js (body params)
     (let ((ext-lib (assoc :data-external-libs params)))
       (if ext-lib
