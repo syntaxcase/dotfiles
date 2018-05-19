@@ -27,7 +27,10 @@
 (require 'use-package)
 (setq use-package-verbose t)
 
-(set-face-attribute 'default nil :font "Ubuntu Mono" :height 138)
+;;; font selection
+(if (eq system-type 'darwin)
+    (set-face-attribute 'default nil :font "Monaco-16")
+  (set-face-attribute 'default nil :font "Ubuntu Mono" :height 138))
 
 ;;;; emacs confirm closing
 (setq confirm-kill-emacs 'yes-or-no-p)
@@ -112,15 +115,18 @@
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package persistent-scratch
+  :ensure t
   :config
   (persistent-scratch-setup-default))
 
 (use-package better-shell
+  :ensure t
   :bind
   (("C-'" . better-shell-shell)
    ("C-=" . better-shell-remote-open)))
 
 (use-package which-key
+  :ensure t
   :diminish which-key-mode
   :config (which-key-mode))
 
@@ -131,6 +137,7 @@
          ("C-h v" . helpful-variable)))
 
 (use-package multiple-cursors
+  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -138,26 +145,35 @@
 
 ;; ace-window
 (use-package ace-window
+  :ensure t
   :bind ("M-p" . ace-window))
 
 ;; hydra
 (use-package hydra
   :ensure t)
 
-;; ivy
-(use-package ivy
+;; counsel
+(use-package counsel
   :ensure t
-  :diminish ivy-mode
-  :bind (("C-c C-r" . ivy-resume)
+  :bind (("M-x" . counsel-M-x)
+         ("M-y" . counsel-yank-pop)
          ("C-s" . swiper)
-         ("M-x" . counsel-M-x)
          ("C-x C-f" . counsel-find-file)
-         ("C-x b" . ivy-switch-buffer)
          ("<f1> f" . counsel-describe-function)
          ("<f1> v" . counsel-describe-variable)
          ("<f1> l" . counsel-find-library)
          ("<f2> i" . counsel-info-lookup-symbol)
          ("<f2> u" . counsel-unicode-char))
+  :config
+  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper))
+
+;; ivy
+(use-package ivy
+  :ensure t
+  :after (counsel)
+  :diminish ivy-mode
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-x b" . ivy-switch-buffer))
   :init
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "%d/%d ")
@@ -169,16 +185,17 @@
   (setq counsel-grep-base-command
         "rg -i -M 200 --no-heading --line-number --color never '%s' %s")
   :config
-  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper)
   (ivy-mode 1))
 
 (use-package avy
+  :ensure t
   :bind (("C-c :" . avy-goto-char)
          ("C-c '" . avy-goto-char-2)
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
 
 (use-package volatile-highlights
+  :ensure t
   :defer 3
   :config
   (volatile-highlights-mode t))
@@ -188,7 +205,8 @@
   :commands fic-mode
   :hook (prog-mode))
 
-(use-package iedit)
+(use-package iedit
+  :ensure t)
 
 (use-package dumb-jump
   :ensure t
@@ -201,6 +219,7 @@
   :config (setq dumb-jump-selector 'ivy))
 
 (use-package goto-chg
+  :ensure t
   :commands goto-last-change
   :bind (("C-." . goto-last-change)
          ("C-," . goto-last-change-reverse)))
@@ -250,15 +269,18 @@
   (company-quickhelp-mode 1))
 
 (use-package company-jedi
+  :ensure t
   :after (company)
   :config (add-to-list 'company-backends 'company-jedi))
 
 (use-package company-racer
+  :ensure t
   :after (company)
   :config
   (add-to-list 'company-backends 'company-racer))
 
 (use-package undo-tree
+  :ensure t
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
@@ -274,6 +296,7 @@
   (global-set-key (kbd "<f7> p") 'hl-find-prev-thing))
 
 (use-package projectile
+  :ensure t
   :defer 1
   :init
   (setq projectile-globally-ignored-directories
@@ -283,6 +306,7 @@
   (projectile-mode))
 
 (use-package magit
+  :ensure t
   :commands (magit-status projectile-vc)
   :init
   (setq magit-completing-read-function 'ivy-completing-read))
@@ -297,6 +321,7 @@
     :commands (all-the-icons-dired-mode)))
 
 (use-package org
+  :ensure org-plus-contrib
   :mode ("\\.org\\'" . org-mode)
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
@@ -322,13 +347,13 @@ SCHEDULED: %t")))
         '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
 
   :config
-  (require 'ox-deck)
   (add-to-list 'org-src-lang-modes '("js" . js2))
   (add-to-list 'org-src-lang-modes '("deck-js" . js2))
 
   (defvar org-babel-default-header-args:deck-js
     '((:results . "html")
       (:exports . "results")))
+
   (defun org-babel-execute:deck-js (body params)
     (let ((ext-lib (assoc :data-external-libs params)))
       (if ext-lib
@@ -345,13 +370,16 @@ SCHEDULED: %t")))
      (python . t))))
 
 (use-package ox-reveal
-  :after (org))
+ :ensure t
+ :after (org))
 
 (use-package org-bullets
-  :after (org)
-  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ :ensure t
+ :after (org)
+ :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (use-package clojure-mode
+  :ensure t
   :mode (("\\.edn$" . clojure-mode)
          ("\\.cljs$" . clojurescript-mode)
          ("\\.cljx$" . clojurex-mode)
@@ -361,6 +389,7 @@ SCHEDULED: %t")))
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
 (use-package cider
+  :ensure t
   :commands (cider cider-connect cider-jack-in)
   :init
   (setq cider-cljs-lein-repl
@@ -370,6 +399,7 @@ SCHEDULED: %t")))
   :pin melpa-stable)
 
 (use-package paredit
+  :ensure t
   :defer t
   :init
   (let ((h (lambda ()
@@ -382,6 +412,7 @@ SCHEDULED: %t")))
     (add-hook 'clojure-mode-hook h)))
 
 (use-package slime
+  :ensure t
   :defer t
   :init
   (setq inferior-lisp-program "/home/acc/bin/sbcl")
@@ -396,22 +427,27 @@ SCHEDULED: %t")))
   )
 
 (use-package haskell-mode
+  :ensure t
   :mode "\\.hs\\'"
   :init (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
 
 (use-package python
+  :ensure t
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode))
 
 (use-package ensime
+  :ensure t
   :commands ensime
   :pin melpa)
 
 (use-package sbt-mode
+  :ensure t
   :commands sbt-start sbt-command
   :pin melpa)
 
 (use-package scala-mode
+  :ensure t
   :mode "\\.scala\\'"
   :pin melpa)
 
@@ -419,6 +455,7 @@ SCHEDULED: %t")))
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Setting up configurations when you load rust-mode
 (use-package rust-mode
+  :ensure t
   :mode "\\.rs\\'"
   :init
   (setq rust-format-on-save t)
@@ -427,6 +464,7 @@ SCHEDULED: %t")))
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package racer
+  :ensure t
   :after (rust-mode)
   :init
   ;; Set path to rust src directory
@@ -437,6 +475,7 @@ SCHEDULED: %t")))
   (add-hook 'rust-mode-hook #'racer-mode))
 
 (use-package flyspell
+  :ensure t
   :defer t
   :init
   (setq flyspell-issue-welcome-flag nil)
@@ -447,6 +486,7 @@ SCHEDULED: %t")))
   (define-key flyspell-mode-map (kbd "C-M-i") nil))
 
 (use-package auctex
+  :ensure t
   :mode ("\\.tex\\'" . latex-mode)
   :init
   (setq TeX-auto-save t)
@@ -462,13 +502,16 @@ SCHEDULED: %t")))
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
 (use-package reftex
+  :ensure t
   :after (auctex)
   :init (setq reftex-plug-into-AUCTeX t))
 
 (use-package json-mode
+  :ensure t
   :mode "\\.json\\'")
 
 (use-package js2-mode
+  :ensure t
   :mode "\\.js\\'"
   :interpreter "node"
   :init
@@ -486,6 +529,7 @@ SCHEDULED: %t")))
               (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
 
 (use-package web-mode
+  :ensure t
   :mode "\\.tsx\\'"
   :init
   (setq web-mode-code-indent-offset 2)
@@ -493,9 +537,11 @@ SCHEDULED: %t")))
   (setq web-mode-markup-indent-offset 2))
 
 (use-package rjsx-mode
+  :ensure t
   :mode "\\.jsx\\'")
 
 (use-package flycheck
+  :ensure t
   :defer 2
   :init
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
@@ -506,10 +552,12 @@ SCHEDULED: %t")))
 
 ;; Set up the basic Elixir mode.
 (use-package elixir-mode
+  :ensure t
   :commands elixir-mode)
 
 ;; Alchemist offers integration with the Mix tool.
 (use-package alchemist
+  :ensure t
   :after (elixir-mode)
   :commands alchemist-mode
   :hook (elixir-mode)
