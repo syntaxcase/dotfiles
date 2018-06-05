@@ -98,10 +98,17 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;;;; Req packages
-(use-package base16-theme
-  :ensure t
+;; (use-package base16-theme
+;;   :ensure t
+;;   :init
+;;   (load-theme 'base16-ocean t))
+(use-package doom-themes
   :init
-  (load-theme 'base16-ocean t))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+  :config
+  (load-theme 'doom-one t)
+  (doom-themes-neotree-config))
 
 (use-package winner
   :defer t
