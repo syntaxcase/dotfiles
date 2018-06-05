@@ -111,7 +111,8 @@
   (doom-themes-neotree-config))
 
 (use-package winner
-  :defer t
+  :bind (("C-c <right>" . winner-redo)
+         ("C-c <left>" . winner-undo))
   :config (winner-mode 1))
 
 (use-package uniquify
