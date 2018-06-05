@@ -19,19 +19,6 @@
  '(package-selected-packages
    (quote
     (ztree projectile-ripgrep immortal-scratch persistent-scratch org-plus-contrib expand-region god-mode helm-flycheck zenburn-theme yaml-mode which-key web-mode volatile-highlights undo-tree toml-mode tern-auto-complete sx stumpwm-mode spaceline solarized-theme smartparens slime scala-mode2 req-package rainbow-delimiters racer python-mode pp-c-l paredit org-bullets org-beautify-theme org nodejs-repl neotree monokai-theme magit js2-refactor jedi jade-mode indent-guide iedit httprepl helm-themes helm-swoop helm-projectile helm-proc helm-descbinds helm-company helm-cider-history helm-ag haskell-mode groovy-mode goto-chg go-mode geiser fringe-helper flycheck-rust flycheck-pos-tip flycheck-clojure flx fireplace ensime dumb-jump dockerfile-mode docker company-web company-tern company-racer company-jedi company-auctex company-ansible avy anzu anti-zenburn-theme ansible-doc ansible aggressive-indent ag)))
- '(safe-local-variable-values
-   (quote
-    ((Package . DRAKMA)
-     (TeX-master . t)
-     (common-lisp-style . modern)
-     (Base . 10)
-     (Package . HUNCHENTOOT)
-     (Syntax . COMMON-LISP)
-     (Package . CXML)
-     (Encoding . utf-8)
-     (readtable . runes)
-     (Package . SAX)
-     (Syntax . Common-Lisp))))
  '(whitespace-style
    (quote
     (face tabs spaces trailing lines space-before-tab indentation empty space-after-tab space-mark tab-mark))))
