@@ -168,15 +168,13 @@
   :ensure t
   :bind (("M-x" . counsel-M-x)
          ("M-y" . counsel-yank-pop)
-         ("C-s" . swiper)
+         ("C-s" . counsel-grep-or-swiper)
          ("C-x C-f" . counsel-find-file)
          ("<f1> f" . counsel-describe-function)
          ("<f1> v" . counsel-describe-variable)
          ("<f1> l" . counsel-find-library)
          ("<f2> i" . counsel-info-lookup-symbol)
-         ("<f2> u" . counsel-unicode-char))
-  :config
-  (global-set-key (kbd "C-s") 'counsel-grep-or-swiper))
+         ("<f2> u" . counsel-unicode-char)))
 
 ;; ivy
 (use-package ivy
