@@ -35,6 +35,9 @@
 ;;;; emacs confirm closing
 (setq confirm-kill-emacs 'yes-or-no-p)
 
+;;;; period single space ends sentence
+(setq sentence-end-double-space nil)
+
 ;;;; disable suspend
 (global-unset-key (kbd "C-z"))
 
