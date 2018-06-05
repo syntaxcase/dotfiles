@@ -304,6 +304,10 @@
   (global-set-key (kbd "<f7> n") 'hl-find-next-thing)
   (global-set-key (kbd "<f7> p") 'hl-find-prev-thing))
 
+(use-package rainbow-mode
+  :ensure t
+  :commands rainbow-mode)
+
 (use-package projectile
   :ensure t
   :defer 1
