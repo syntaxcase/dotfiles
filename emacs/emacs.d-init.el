@@ -349,15 +349,8 @@
 
   (setq org-log-done 'time)
 
-  (setq org-agenda-files '("~/src/org-mode/"))
-  (setq org-capture-templates
-        '(("t" "acc TODO task format." entry
-           (file "~/src/org-mode/todo.org")
-           "* TODO %?
-SCHEDULED: %t")))
-
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELED")))
+        '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
 
   :config
   (require 'ox-deck)
