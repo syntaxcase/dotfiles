@@ -55,6 +55,9 @@
 (show-paren-mode t)
 (setq visible-bell t)
 
+;;; Enable narrowing
+(put 'narrow-to-region 'disabled nil)
+
 ;; Stretch cursor to cover long characters (like TABs)
 (setq x-stretch-cursor t)
 
