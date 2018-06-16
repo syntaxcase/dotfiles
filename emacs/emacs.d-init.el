@@ -482,16 +482,15 @@
   :config
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-(use-package racer
+(use-package lsp-rust
   :ensure t
-  :after (rust-mode)
+  :after (lsp-mode rust-mode)
+
   :init
-  ;; Set path to rust src directory
-  (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
-  (setq racer-rust-src-path +rustc-src+)
+  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+
   :config
-  (add-hook 'racer-mode-hook #'eldoc-mode)
-  (add-hook 'rust-mode-hook #'racer-mode))
+  (add-hook 'rust-mode-hook #'lsp-rust-enable))
 
 (use-package flyspell
   :ensure t
