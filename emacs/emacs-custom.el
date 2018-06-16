@@ -19,10 +19,16 @@
  '(org-agenda-files (quote ("~/Dropbox/org/general.org")))
  '(package-selected-packages
    (quote
-    (rainbow-mode ox-html5slide htmlize simple-httpd company-box doom-themes org-plus-contrib php-mode company-php csharp-mode transpose-frame py-autopep8 evil helpful company-quickhelp-mode company-quickhelp fic-mode ranger all-the-icons-dired all-the-icons-ivy dired-sidebar use-package flow-minor-mode company-flow flycheck-flow eacl hl-anything treemacs-projectile eyebrowse lispy base16-theme prettier-js indium ace-window wgrep-ag ox-reveal xref-js2 cider clojure-mode clojure-mode-extra-font-locking counsel-projectile ivy-hydra alchemist company-erlang elixir-mode flycheck-elixir flycheck-mix better-shell rjsx-mode ztree projectile-ripgrep immortal-scratch persistent-scratch expand-region god-mode zenburn-theme yaml-mode which-key web-mode volatile-highlights undo-tree toml-mode sx stumpwm-mode solarized-theme smartparens slime scala-mode2 rainbow-delimiters racer python-mode pp-c-l paredit org-bullets org-beautify-theme nodejs-repl neotree monokai-theme magit js2-refactor jade-mode indent-guide iedit haskell-mode groovy-mode goto-chg go-mode geiser fringe-helper flycheck-rust flycheck-pos-tip flx fireplace ensime dumb-jump dockerfile-mode docker company-web company-racer company-jedi company-auctex company-ansible avy anzu anti-zenburn-theme ansible-doc ansible aggressive-indent ag)))
+    (lsp-ui lsp-java company-lsp lsp-rust rainbow-mode ox-html5slide htmlize simple-httpd doom-themes org-plus-contrib php-mode company-php csharp-mode transpose-frame py-autopep8 evil helpful company-quickhelp-mode company-quickhelp fic-mode ranger all-the-icons-dired all-the-icons-ivy dired-sidebar use-package flow-minor-mode company-flow flycheck-flow hl-anything treemacs-projectile eyebrowse lispy base16-theme prettier-js indium ace-window wgrep-ag ox-reveal xref-js2 cider clojure-mode clojure-mode-extra-font-locking counsel-projectile ivy-hydra alchemist company-erlang elixir-mode flycheck-elixir flycheck-mix better-shell rjsx-mode ztree projectile-ripgrep persistent-scratch expand-region god-mode zenburn-theme yaml-mode which-key web-mode volatile-highlights undo-tree toml-mode sx stumpwm-mode solarized-theme smartparens slime scala-mode2 rainbow-delimiters racer python-mode pp-c-l paredit org-bullets nodejs-repl neotree monokai-theme magit js2-refactor jade-mode indent-guide iedit haskell-mode groovy-mode goto-chg go-mode geiser fringe-helper flycheck-rust flycheck-pos-tip ensime dumb-jump dockerfile-mode docker company-web company-racer company-jedi company-auctex company-ansible avy anti-zenburn-theme ansible-doc ansible aggressive-indent ag)))
  '(whitespace-style
    (quote
     (face tabs spaces trailing lines space-before-tab indentation empty space-after-tab space-mark tab-mark))))
 
 (provide 'emacs-custom)
 ;;; emacs-custom.el ends here
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
