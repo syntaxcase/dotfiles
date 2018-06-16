@@ -283,11 +283,12 @@
   :config
   (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi))))
 
-(use-package company-racer
+(use-package company-lsp
   :ensure t
   :after (company)
+
   :config
-  (add-to-list 'company-backends 'company-racer))
+  (add-to-list 'company-backends 'company-lsp))
 
 (use-package undo-tree
   :ensure t
