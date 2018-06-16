@@ -601,6 +601,10 @@
   (bind-keys :map alchemist-mode-map
              ("C-x C-e" . alchemist-iex-send-current-line)))
 
+(use-package simple-httpd
+  :ensure t
+  :commands httpd-start)
+
 ;;; Typescript
 ;; (req-package tide
 ;;   :require (flycheck company web-mode)
