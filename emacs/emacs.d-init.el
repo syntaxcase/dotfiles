@@ -196,6 +196,10 @@
         '((t . ivy--regex-ignore-order)))
   (setq counsel-grep-base-command
         "rg -i -M 200 --no-heading --line-number --color never '%s' %s")
+
+  ;; Make the prompt selectable with <up>
+  (setq ivy-use-selectable-prompt t)
+
   :config
   (ivy-mode 1))
 
