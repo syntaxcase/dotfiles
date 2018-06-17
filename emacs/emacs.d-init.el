@@ -100,6 +100,9 @@
 ;; https://github.com/dakrone/eos/blob/master/eos.org
 (setq save-interprogram-paste-before-kill t)
 
+;;; flyspell-prog-mode
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
 ;;;; Req packages
 ;; (use-package base16-theme
 ;;   :ensure t
