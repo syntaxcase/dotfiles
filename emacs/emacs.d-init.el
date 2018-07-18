@@ -693,8 +693,9 @@
     (forward-char -1))
   (point))
 
+;; Thanks to https://www.masteringemacs.org/article/swapping-quote-symbols-emacs-parsepartialsexp
 (defun acc/swap-quotes ()
-  "Swap the quote symbols in a \\[python-mode] string."
+  "Swap the quote symbols in a string."
   (interactive)
   (save-excursion
     (let ((bos (save-excursion
@@ -708,7 +709,7 @@
       ;; if the following character is a single quote then the
       ;; `replacement-char' should be a double quote.
       (when (eq (following-char) ?\')
-          (setq replacement-char ?\"))
+        (setq replacement-char ?\"))
       (delete-char 1)
       (insert replacement-char)
       (goto-char eos)
