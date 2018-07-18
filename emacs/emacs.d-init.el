@@ -172,6 +172,12 @@
          ("<f2> i" . counsel-info-lookup-symbol)
          ("<f2> u" . counsel-unicode-char)))
 
+(use-package counsel-projectile
+  :ensure t
+  :after (counsel projectile)
+  :config
+  (counsel-projectile-mode))
+
 ;; ivy
 (use-package ivy
   :ensure t
