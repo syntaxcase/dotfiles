@@ -477,7 +477,7 @@
 (use-package ensime
   :ensure t
   :commands ensime
-  :pin melpa)
+  :pin melpa-stable)
 
 (use-package sbt-mode
   :ensure t
