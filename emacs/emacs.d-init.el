@@ -645,6 +645,10 @@
   (bind-keys :map alchemist-mode-map
              ("C-x C-e" . alchemist-iex-send-current-line)))
 
+(use-package php-mode
+  :ensure t
+  :mode "\\.php\\'")
+
 (use-package simple-httpd
   :ensure t
   :commands httpd-start)
