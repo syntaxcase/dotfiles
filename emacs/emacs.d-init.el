@@ -101,17 +101,10 @@
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 ;;;; Req packages
-;; (use-package base16-theme
-;;   :ensure t
-;;   :init
-;;   (load-theme 'base16-ocean t))
-(use-package doom-themes
-  :init
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
+(use-package gruvbox-theme
+  :ensure t
   :config
-  (load-theme 'doom-one t)
-  (doom-themes-neotree-config))
+  (load-theme 'gruvbox t))
 
 (use-package winner
   :bind (("C-c <right>" . winner-redo)
