@@ -80,9 +80,6 @@
 ;;;; Don't use native GTK tooltips
 (setq x-gtk-use-system-tooltips nil)
 
-;;;; Bind C-x o to M-o
-(global-set-key (kbd "M-o") 'other-window)
-
 ;;;; Set title format
 (setq frame-title-format
       (list (format "%s %%S: %%j " (system-name))
@@ -163,7 +160,7 @@
 ;; ace-window
 (use-package ace-window
   :ensure t
-  :bind ("M-p" . ace-window))
+  :bind ("M-o" . ace-window))
 
 ;; hydra
 (use-package hydra
