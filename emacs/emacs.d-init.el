@@ -334,6 +334,10 @@
   :ensure t
   :commands rainbow-mode)
 
+(use-package rainbow-delimiters
+  :ensure t
+  :commands rainbow-delimiters-mode)
+
 (use-package projectile
   :ensure t
   :bind (("C-c p p" . projectile-switch-project)
