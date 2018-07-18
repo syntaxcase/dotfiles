@@ -597,6 +597,21 @@
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
+;;; AsciiDoc mode
+(use-package adoc-mode
+  :ensure t
+  :mode "\\.adoc\\'")
+
+;;; YAML mode
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yaml\\'")
+
+;;; toml mode
+(use-package toml-mode
+  :ensure t
+  :mode "\\.toml\\'")
+
 ;;; Java conf
 (use-package lsp-java
   :ensure t
