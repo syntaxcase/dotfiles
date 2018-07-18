@@ -106,6 +106,14 @@
   :config
   (load-theme 'gruvbox t))
 
+(use-package neotree
+  :ensure t
+  :bind (("<f8>" . neotree-toggle))
+  :init
+  (setq neo-theme 'arrow)
+  (setq neo-show-hidden-files t)
+  (setq neo-smart-open t))
+
 (use-package winner
   :bind (("C-c <right>" . winner-redo)
          ("C-c <left>" . winner-undo))
