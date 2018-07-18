@@ -196,6 +196,16 @@
   :config
   (ivy-mode 1))
 
+(use-package all-the-icons-ivy
+  :ensure t
+  :after (ivy)
+  :config
+  (all-the-icons-ivy-setup))
+
+(use-package ivy-hydra
+  :ensure t
+  :after (ivy))
+
 (use-package avy
   :ensure t
   :bind (("C-c :" . avy-goto-char)
