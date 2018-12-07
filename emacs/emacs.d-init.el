@@ -184,7 +184,13 @@
 
 ;; hydra
 (use-package hydra
-  :ensure t)
+  :ensure t
+  :config
+  (defhydra hydra-flymake (global-map "C-c f")
+    "flymake"
+    ("n" flymake-goto-next-error)
+    ("p" flymake-goto-prev-error)
+    ("q" nil)))
 
 ;; counsel
 (use-package counsel
