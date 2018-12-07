@@ -30,7 +30,8 @@
 ;;; font selection
 (if (eq system-type 'darwin)
     (set-face-attribute 'default nil :font "Monaco-16")
-  (set-face-attribute 'default nil :font "Ubuntu Mono" :height 138))
+                                        ;  (set-face-attribute 'default nil :font "Ubuntu Mono" :height 138)
+  (set-face-attribute 'default nil :font "Iosevka" :height 143))
 
 ;;;; emacs confirm closing
 (setq confirm-kill-emacs 'yes-or-no-p)
