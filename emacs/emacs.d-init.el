@@ -154,6 +154,10 @@
   :bind
   (("C-'" . better-shell-shell)
    ("C-=" . better-shell-remote-open)))
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
 
 (use-package which-key
   :ensure t
