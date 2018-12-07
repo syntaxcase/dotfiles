@@ -101,6 +101,9 @@
 ;; https://github.com/dakrone/eos/blob/master/eos.org
 (setq save-interprogram-paste-before-kill t)
 
+;;; always enable subword-mode when programming
+(add-hook 'prog-mode-hook #'subword-mode)
+
 ;;; flyspell-prog-mode
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
