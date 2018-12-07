@@ -56,6 +56,9 @@
 (show-paren-mode t)
 (setq visible-bell t)
 
+;;; expand kill-ring size
+(setq kill-ring-max 500)
+
 ;;; Enable narrowing
 (put 'narrow-to-region 'disabled nil)
 
