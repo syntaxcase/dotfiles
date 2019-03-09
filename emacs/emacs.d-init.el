@@ -209,14 +209,14 @@
          ("<f2> u" . counsel-unicode-char)))
 
 (use-package counsel-projectile
-  :ensure t
   :after (counsel projectile)
-  :config
-  (counsel-projectile-mode))
+  :ensure t
+  :config (counsel-projectile-mode 1))
 
 ;; ivy
 (use-package ivy
   :ensure t
+  :demand t
   :after (counsel)
   :bind (("C-c C-r" . ivy-resume)
          ("C-x b" . ivy-switch-buffer))
