@@ -661,15 +661,6 @@
   :ensure t
   :mode "\\.toml\\'")
 
-;;; Java conf
-(use-package lsp-java
-  :ensure t
-  :after (lsp-mode)
-  :commands lsp-java-enable
-  :init
-  (setq lsp-java--workspace-folders (list))
-
-  (add-hook 'java-mode-hook #'lsp-java-enable))
 
 ;; Set up the basic Elixir mode.
 (use-package elixir-mode
