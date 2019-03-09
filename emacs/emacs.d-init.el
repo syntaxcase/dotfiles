@@ -477,16 +477,11 @@
 
 (use-package paredit
   :ensure t
-  :defer t
-  :init
-  (let ((h (lambda ()
-             (paredit-mode +1)
-             (turn-on-eldoc-mode))))
-    (add-hook 'emacs-lisp-mode-hook h)
-    (add-hook 'lisp-mode-hook h)
-    (add-hook 'lisp-interaction-mode-hook h)
-    (add-hook 'scheme-mode-hook h)
-    (add-hook 'clojure-mode-hook h)))
+  :hook ((emacs-lisp-mode . paredit-mode)
+         (lisp-mode . paredit-mode)
+         (lisp-interaction-mode . paredit-mode)
+         (scheme-mode . paredit-mode)
+         (clojure-mode . paredit-mode)))
 
 (use-package haskell-mode
   :ensure t
