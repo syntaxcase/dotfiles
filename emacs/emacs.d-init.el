@@ -250,7 +250,7 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-c :" . avy-goto-char)
+  :bind (("C-'" . avy-goto-char)
          ("C-c '" . avy-goto-char-2)
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
