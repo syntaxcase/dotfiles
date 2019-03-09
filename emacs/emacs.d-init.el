@@ -143,9 +143,8 @@
 
 (use-package better-shell
   :ensure t
-  :bind
-  (("C-'" . better-shell-shell)
-   ("C-=" . better-shell-remote-open)))
+  :commands (better-shell-shell better-shell-remote-open))
+
 (use-package expand-region
   :ensure t
   :bind ("C-=" . er/expand-region))
