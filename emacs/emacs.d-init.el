@@ -333,6 +333,11 @@
   :config
   (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi))))
 
+(use-package detour
+  :ensure t
+  :bind (("s-." . detour-mark)
+         ("s-," . detour-back)))
+
 (use-package company-lsp
   :ensure t
   :after (company)
