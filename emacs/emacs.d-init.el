@@ -157,6 +157,13 @@
   :config
   (minions-mode 1))
 
+(use-package doom-modeline
+  :pin melpa-stable
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :init
+  (setq doom-modeline-major-mode-icon nil))
+
 (use-package which-key
   :ensure t
   :diminish which-key-mode
