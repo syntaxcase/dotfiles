@@ -364,8 +364,7 @@
 
 (use-package projectile
   :ensure t
-  :bind (("C-c p p" . projectile-switch-project)
-         ("C-c p f" . projectile-find-file))
+  :bind-keymap ("C-c p" . projectile-command-map)
   :init
   (setq projectile-globally-ignored-directories
         '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "node_modules"))
