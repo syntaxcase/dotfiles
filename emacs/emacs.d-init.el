@@ -440,6 +440,10 @@
  :after (org)
  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
+(use-package dockerfile-mode
+  :ensure t
+  :mode "Dockerfile\\'")
+
 (use-package clojure-mode
   :ensure t
   :mode (("\\.edn$" . clojure-mode)
