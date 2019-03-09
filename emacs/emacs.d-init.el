@@ -150,6 +150,12 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
+(use-package minions
+  :ensure t
+  :init
+  (setq minions-mode-line-lighter "#")
+  :config
+  (minions-mode 1))
 
 (use-package which-key
   :ensure t
