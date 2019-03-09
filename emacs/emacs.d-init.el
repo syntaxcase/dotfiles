@@ -374,9 +374,21 @@
 
 (use-package magit
   :ensure t
-  :commands (magit-status projectile-vc)
+  :bind (("C-x g" . magit-status))
   :init
+  ;(setq vc-handled-backends '(RCS CVS SVN SCCS SRC Bzr Hg Mtn))
   (setq magit-completing-read-function 'ivy-completing-read))
+
+(use-package magit-todos
+  :ensure t
+  :after magit
+  :hook (magit-mode . magit-todos-mode))
+
+(use-package forge
+  :ensure t
+  :after magit
+  :init
+  (setq auth-sources '("~/.authinfo.gpg")))
 
 (use-package dired-sidebar
   :ensure t
