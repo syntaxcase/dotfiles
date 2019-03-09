@@ -121,14 +121,6 @@
   (setq neo-show-hidden-files t)
   (setq neo-smart-open t))
 
-(use-package key-chord
-  :ensure t
-  :after (undo-tree)
-  :config
-  (key-chord-define-global "fj" 'undo)
-  (key-chord-define-global "FJ" 'redo)
-  (key-chord-mode 1))
-
 (use-package winner
   :bind (("C-c <right>" . winner-redo)
          ("C-c <left>" . winner-undo))
