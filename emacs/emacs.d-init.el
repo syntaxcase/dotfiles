@@ -549,20 +549,7 @@
   :ensure t
   :mode "\\.rs\\'"
   :init
-  (setq rust-format-on-save t)
-
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-(use-package lsp-rust
-  :ensure t
-  :after (lsp-mode rust-mode)
-
-  :init
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-
-  :config
-  (add-hook 'rust-mode-hook #'lsp-rust-enable))
+  (setq rust-format-on-save t))
 
 (use-package flyspell
   :ensure t
