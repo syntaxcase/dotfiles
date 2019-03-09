@@ -602,21 +602,25 @@
 
 (use-package js2-mode
   :ensure t
+  :after (prettier-js)
   :mode "\\.js\\'"
   :interpreter "node"
   :init
+  (setq js-switch-indent-offset 2)
   (setq js-indent-level 2)
   (setq js2-basic-offset 2)
+  :hook (js2-mode . prettier-js-mode)
   :config
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
   (js2r-add-keybindings-with-prefix "C-c M-r")
   (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
 
-  (define-key js-mode-map (kbd "M-.") nil)
+  (define-key js-mode-map (kbd "M-.") nil))
 
-  (add-hook 'js2-mode-hook
-            (lambda ()
-              (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+(use-package prettier-js
+  :ensure t
+  :init
+  (setq prettier-js-args '("--trailing-comma" "es5" "--single-quote")))
 
 (use-package web-mode
   :ensure t
@@ -628,7 +632,10 @@
 
 (use-package rjsx-mode
   :ensure t
-  :mode "\\.jsx\\'")
+  :mode "\\.jsx\\'"
+  :after (prettier-js)
+  :config
+  :hook (rjsx-mode . prettier-js-mode))
 
 (use-package flycheck
   :ensure t
@@ -696,30 +703,20 @@
   :commands httpd-start)
 
 ;;; Typescript
-;; (req-package tide
-;;   :require (flycheck company web-mode)
-;;   :preface (defun setup-tide-mode ()
-;;              (interactive)
-;;              (message "Setting up tide mode")
-;;              (tide-setup)
-;;              (turn-on-eldoc-mode)
-;; ;             (tide-hl-identifier-mode +1)
-;;              )
-;;   :init
-;;   (setq typescript-indent-level 2)
-;;   (setq tide-format-options '(:indentSize 2 :tabSize 2))
+(use-package tide
+  :after (flycheck company js2-mode)
+  :init
+  (setq typescript-indent-level 2)
+  (setq tide-format-options '(:indentSize 2 :tabSize 2))
 
-;;   :config
-;;   (add-hook 'web-mode-hook
-;;             (lambda ()
-;;               (when (string-equal "tsx" (file-name-extension buffer-file-name))
-;;                 (setup-tide-mode))))
+  :config
+  (add-hook 'js2-mode-hook (lambda () (tide-setup)))
+  (add-hook 'rjsx-mode-hook (lambda () (tide-setup)))
 
-;;   (add-hook 'tide-mode-hook
-;;             (lambda ()
-;;               (add-hook 'before-save-hook 'tide-format-before-save)))
-
-;;   (add-hook 'typescript-mode-hook #'setup-tide-mode))
+  ;; (add-hook 'tide-mode-hook
+  ;;           (lambda ()
+  ;;             (add-hook 'before-save-hook 'tide-format-before-save)))
+  )
 
 ;;;; My utility functions!
 (defun acc/point-in-string-p (pt)
