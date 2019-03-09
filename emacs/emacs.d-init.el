@@ -661,6 +661,10 @@
   :ensure t
   :mode "\\.toml\\'")
 
+;;; Groovy
+(use-package groovy-mode
+  :ensure    t
+  :mode      "\\.\\(groovy\\|gradle\\)$")
 
 ;; Set up the basic Elixir mode.
 (use-package elixir-mode
