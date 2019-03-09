@@ -327,12 +327,6 @@
   :config
   (company-quickhelp-mode 1))
 
-(use-package company-jedi
-  :ensure t
-  :after (company)
-  :config
-  (add-hook 'python-mode-hook (lambda () (add-to-list 'company-backends 'company-jedi))))
-
 (use-package detour
   :ensure t
   :bind (("s-." . detour-mark)
