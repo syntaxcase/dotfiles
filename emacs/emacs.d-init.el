@@ -488,21 +488,6 @@
     (add-hook 'scheme-mode-hook h)
     (add-hook 'clojure-mode-hook h)))
 
-(use-package slime
-  :ensure t
-  :defer t
-  :init
-  (setq inferior-lisp-program "/home/acc/bin/sbcl")
-  ;; (setq inferior-lisp-program "/home/acc/sw/ccl-1.9/lx86cl -K utf-8")
-  ;(load (expand-file-name "~/quicklisp/slime-helper.el"))
-  (setq slime-contribs '(slime-fancy
-                         slime-indentation
-                         slime-compiler-notes-tree))
-
-  ;; CLHS
-  ;(load (expand-file-name "~/quicklisp/clhs-use-local.el") t)
-  )
-
 (use-package haskell-mode
   :ensure t
   :mode "\\.hs\\'"
