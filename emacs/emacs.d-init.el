@@ -166,7 +166,6 @@
 
 (use-package which-key
   :ensure t
-  :diminish which-key-mode
   :config (which-key-mode))
 
 (use-package helpful
@@ -220,7 +219,6 @@
 (use-package ivy
   :ensure t
   :after (counsel)
-  :diminish ivy-mode
   :bind (("C-c C-r" . ivy-resume)
          ("C-x b" . ivy-switch-buffer))
   :init
@@ -346,12 +344,10 @@
 
 (use-package undo-tree
   :ensure t
-  :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
 (use-package hl-anything
   :ensure t
-  :diminish hl-highlight-mode
   :commands hl-highlight-mode
   :init
   (global-set-key (kbd "<f7> <f7>") 'hl-highlight-thingatpt-local)
