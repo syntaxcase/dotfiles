@@ -746,6 +746,67 @@
       (delete-char -1)
       (insert replacement-char))))
 
+(defun acc/beginning-of-js-object ()
+  (while (not (char-equal ?\{ (following-char)))
+    (forward-char -1))
+  (point))
+
+(defun acc/space-js-object ()
+  "Insert one space after the opening `{' and befor the closing `}'."
+  (interactive)
+  (save-excursion
+    (let ((boo (save-excursion
+                 (acc/beginning-of-js-object))))
+      (goto-char boo)
+      (forward-char)
+      (just-one-space)
+      (goto-char boo)
+      (forward-sexp)
+      (forward-char -1)
+      (just-one-space))))
+
+;; From https://www.emacswiki.org/emacs/IncrementNumber
+(defun acc/increment-number-at-point ()
+  "Increments the number under point."
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+
+;; Thanks Alessio and thanks http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+(defun acc/smarter-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+;; remap C-a to `smarter-move-beginning-of-line'
+(global-set-key [remap move-beginning-of-line]
+                'acc/smarter-move-beginning-of-line)
+
+(global-set-key (kbd "C-c m s") 'acc/swap-quotes)
+(global-set-key (kbd "C-c m a") 'acc/beginning-of-string)
+(global-set-key (kbd "C-c m +") 'acc/increment-number-at-point)
+(global-set-key (kbd "C-c m {") 'acc/space-js-object)
+
 (provide '.emacs)
 
 (provide 'init)
