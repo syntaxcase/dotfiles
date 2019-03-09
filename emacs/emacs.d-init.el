@@ -257,7 +257,6 @@
 
 (use-package volatile-highlights
   :ensure t
-  :defer 3
   :config
   (volatile-highlights-mode t))
 
@@ -311,7 +310,6 @@
    ("C-M-t" . sp-transpose-sexp)))
 
 (use-package company
-  :defer 2
   :ensure t
   :init
   (setq company-idle-delay 0.2)
@@ -615,7 +613,6 @@
 
 (use-package flycheck
   :ensure t
-  :defer 2
   :init
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   :config
