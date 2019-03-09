@@ -526,6 +526,10 @@
   :init
   (setq lsp-ui-sideline-update-mode 'point))
 
+(use-package deadgrep
+  :ensure t
+  :bind ("<f5>" . deadgrep))
+
 ;;;; Rust stuff
 ;; mostly taken from: http://bassam.co/emacs/2015/08/24/rust-with-emacs/
 ;; Setting up configurations when you load rust-mode
