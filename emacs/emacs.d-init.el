@@ -681,12 +681,7 @@
 
   :config
   (add-hook 'js2-mode-hook (lambda () (tide-setup)))
-  (add-hook 'rjsx-mode-hook (lambda () (tide-setup)))
-
-  ;; (add-hook 'tide-mode-hook
-  ;;           (lambda ()
-  ;;             (add-hook 'before-save-hook 'tide-format-before-save)))
-  )
+  (add-hook 'rjsx-mode-hook (lambda () (tide-setup))))
 
 ;;;; My utility functions!
 (defun acc/point-in-string-p (pt)
