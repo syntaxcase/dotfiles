@@ -19,7 +19,6 @@
                          ("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")))
 (require 'package)
-(setq package-enable-at-startup nil)
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
