@@ -516,6 +516,7 @@
   :pin melpa)
 
 (use-package lsp-mode
+  :commands lsp
   :ensure t)
 
 (use-package lsp-ui
