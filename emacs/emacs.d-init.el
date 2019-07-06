@@ -88,12 +88,16 @@
       (list (format "%s %%S: %%j " (system-name))
         '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
-;;;; Backup files
-(setq backup-directory-alist `(("." . "~/.emacs.d/backup-files")))
+;;;; Backup and auto-save files
+(defvar my-backup-files-dir "~/.emacs.d/backup-files")
+(setq backup-directory-alist `(("." . ,my-backup-files-dir)))
 (setq delete-old-versions t
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
+
+(setq auto-save-file-name-transforms
+      `((".*" ,my-backup-files-dir t)))
 
 ;; Save whatever’s in the current (system) clipboard before
 ;; replacing it with the Emacs’ text.
