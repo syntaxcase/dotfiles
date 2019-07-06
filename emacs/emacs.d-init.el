@@ -111,10 +111,16 @@
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 ;;;; Req packages
-(use-package gruvbox-theme
+;; (use-package gruvbox-theme
+;;   :ensure t
+;;   :config
+;;   (load-theme 'gruvbox t))
+
+(use-package zerodark-theme
   :ensure t
   :config
-  (load-theme 'gruvbox t))
+  (load-theme 'zerodark t))
+
 
 (use-package neotree
   :ensure t
