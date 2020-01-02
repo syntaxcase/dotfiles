@@ -588,6 +588,13 @@
   :init
   (setq lsp-ui-sideline-update-mode 'point))
 
+(use-package java-mode
+  :mode "\\.java\\'")
+
+(use-package lsp-java
+  :ensure t
+  :after (lsp java-mode))
+
 (use-package deadgrep
   :ensure t
   :bind ("<f5>" . deadgrep))
