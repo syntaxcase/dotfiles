@@ -353,7 +353,7 @@
 
 (use-package company-lsp
   :ensure t
-  :after (company)
+  :after (company lsp)
 
   :config
   (add-to-list 'company-backends 'company-lsp))
