@@ -168,7 +168,8 @@
   :ensure t
   :hook (after-init . doom-modeline-mode)
   :init
-  (setq doom-modeline-major-mode-icon nil))
+  (setq doom-modeline-major-mode-icon nil)
+  (setq doom-modeline-env-enable-python nil))
 
 (use-package which-key
   :ensure t
