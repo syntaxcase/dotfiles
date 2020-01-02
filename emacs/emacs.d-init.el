@@ -679,6 +679,67 @@
   :config
   (add-hook 'js-mode-hook (lambda () (tide-setup))))
 
+(use-package smtpmail
+  :custom
+  (user-mail-address "alessandro.carlo@chiri.co")
+  (smtpmail-default-smtp-server "mail.gandi.net")
+  (smtpmail-smtp-server "mail.gandi.net")
+  (smtpmail-stream-type 'ssl)
+  (smtpmail-smtp-service 465)
+  (user-full-name "Alessandro Carlo Chirico")
+  (auth-sources '("~/.authinfo.gpg")))
+
+(use-package smtpmail-async
+  :after smtpmail
+  :custom
+  (send-mail-function 'async-smtpmail-send-it)
+  (message-send-mail-function 'async-smtpmail-send-it))
+
+(use-package mu4e
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :commands mu4e
+  :custom
+  (mail-user-agent 'mu4e-user-agent)
+  (mu4e-get-mail-command "mbsync -a")
+  (mu4e-hide-index-messages t)
+  (mu4e-update-interval nil)
+  (mu4e-change-filenames-when-moving t)
+  (mu4e-completing-read-function 'completing-read)
+  (mu4e-compose-signature-auto-include nil)
+  (mu4e-maildir "~/Maildir")
+  (mu4e-sent-folder   "/chirico-gandi/Sent")
+  (mu4e-drafts-folder "/chirico-gandi/Drafts")
+  (mu4e-trash-folder  "/chirico-gandi/Trash")
+  (mu4e-refile-folder "/chirico-gandi/Archive")
+  (mu4e-sent-messages-behavior 'sent)
+  (message-kill-buffer-on-exit nil)
+  (mu4e-view-show-addresses t)
+  (mu4e-context-policy 'pick-first)
+  (mu4e-compose-context-policy 'ask)
+  (message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
+  (message-citation-line-function 'message-insert-formatted-citation-line)
+  :bind (:map mu4e-main-mode-map
+              ("g" . mu4e-update-mail-and-index))
+  :config
+  ;; thanks https://groups.google.com/forum/#!topic/mu-discuss/JqHEGycEyKI
+  (defun my-mu4e-action-view-with-xwidget (msg)
+    "View the body of the message inside xwidget-webkit."
+    (unless (fboundp 'xwidget-webkit-browse-url)
+      (mu4e-error "No xwidget support available"))
+    (let* ((html (mu4e-message-field msg :body-html))
+           (txt (mu4e-message-field msg :body-txt))
+           (tmpfile (format "%s%x.html" temporary-file-directory (random t))))
+      (unless (or html txt)
+        (mu4e-error "No body part for this message"))
+      (with-temp-buffer
+        ;; simplistic -- but note that it's only an example...
+        (insert (or html (concat "<pre>" txt "</pre>")))
+        (write-file tmpfile)
+        (xwidget-webkit-browse-url (concat "file://" tmpfile) t))))
+
+  (add-to-list 'mu4e-view-actions
+               '("webkit" . my-mu4e-action-view-with-xwidget) t))
+
 ;;;; My utility functions!
 (defun acc/point-in-string-p (pt)
   "Return t if PT is in a string."
