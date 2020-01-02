@@ -511,6 +511,12 @@
   :mode "\\.scala\\'"
   :pin melpa)
 
+(use-package yasnippet
+  :ensure t
+  :config
+  (use-package yasnippet-snippets
+    :ensure t))
+
 (use-package treemacs
   :ensure t
   :commands treemacs
