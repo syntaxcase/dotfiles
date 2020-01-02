@@ -722,7 +722,7 @@
   (point))
 
 (defun acc/space-js-object ()
-  "Insert one space after the opening `{' and befor the closing `}'."
+  "Insert one space after the opening `{' and before the closing `}'."
   (interactive)
   (save-excursion
     (let ((boo (save-excursion
