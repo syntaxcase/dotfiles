@@ -214,7 +214,16 @@
          ("<f1> v" . counsel-describe-variable)
          ("<f1> l" . counsel-find-library)
          ("<f2> i" . counsel-info-lookup-symbol)
-         ("<f2> u" . counsel-unicode-char)))
+         ("<f2> u" . counsel-unicode-char))
+  :custom
+  (setq ivy-sort-functions-alist
+        (append ivy-sort-functions-alist
+                '((persp-kill-buffer   . nil)
+                  (persp-remove-buffer . nil)
+                  (persp-add-buffer    . nil)
+                  (persp-switch        . nil)
+                  (persp-window-switch . nil)
+             (persp-frame-switch  . nil)))))
 
 (use-package counsel-projectile
   :after (counsel projectile)
@@ -376,11 +385,28 @@
   :config
   (projectile-mode))
 
+(use-package persp-mode
+  :ensure t
+  :after (ivy)
+  :init (setq-default persp-keymap-prefix (kbd "C-c w"))
+  :bind (("C-c w s" . persp-frame-switch))
+  :config
+  (add-hook 'ivy-ignore-buffers
+              #'(lambda (b)
+                  (when persp-mode
+                    (let ((persp (get-current-persp)))
+                      (if persp
+                          (not (persp-contain-buffer-p b persp))
+                        nil)))))
+
+  (persp-mode))
+
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status))
   :init
   ;(setq vc-handled-backends '(RCS CVS SVN SCCS SRC Bzr Hg Mtn))
+  (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
   (setq magit-completing-read-function 'ivy-completing-read))
 
 (use-package magit-todos
