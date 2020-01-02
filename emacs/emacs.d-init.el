@@ -528,6 +528,9 @@
   :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode))
 
+(use-package pyenv-mode
+  :hook python-mode)
+
 (use-package ensime
   :ensure t
   :commands ensime
@@ -604,6 +607,13 @@
 (use-package lsp-java
   :ensure t
   :after (lsp java-mode))
+
+(use-package pipenv
+  :ensure t
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq pipenv-with-projectile nil)
+  (setq pipenv-with-flycheck nil))
 
 (use-package deadgrep
   :ensure t
