@@ -109,6 +109,9 @@
 ;;; always enable subword-mode when programming
 (add-hook 'prog-mode-hook #'subword-mode)
 
+;;; handle long lines better
+(global-so-long-mode 1)
+
 ;;; flyspell-prog-mode
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
