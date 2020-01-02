@@ -126,15 +126,6 @@
   :config
   (load-theme 'zerodark t))
 
-
-(use-package neotree
-  :ensure t
-  :bind (("<f8>" . neotree-toggle))
-  :init
-  (setq neo-theme 'arrow)
-  (setq neo-show-hidden-files t)
-  (setq neo-smart-open t))
-
 (use-package winner
   :bind (("C-c <right>" . winner-redo)
          ("C-c <left>" . winner-undo))
@@ -519,6 +510,30 @@
   :ensure t
   :mode "\\.scala\\'"
   :pin melpa)
+
+(use-package treemacs
+  :ensure t
+  :commands treemacs
+  :bind (("M-0" . treemacs-select-window)))
+
+(use-package treemacs-projectile
+  :ensure t
+  :after treemacs projectile)
+
+(use-package treemacs-icons-dired
+  :ensure t
+  :after treemacs dired
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :ensure t
+  :after treemacs magit)
+
+(use-package lsp-treemacs
+  :ensure t
+  :after treemacs lsp
+  :config
+  (lsp-treemacs-sync-mode 1))
 
 (use-package lsp-mode
   :commands lsp
