@@ -578,8 +578,12 @@
   :mode  "\\.go\\'")
 
 (use-package lsp-mode
-  :commands lsp
-  :ensure t)
+  :ensure t
+  :hook ((go-mode . lsp-deferred)
+         (rust-mode . lsp-deferred)
+         (java-mode . lsp-deferred)
+         (dockerfile-mode . lsp-deferred))
+  :commands (lsp lsp-deferred))
 
 (use-package lsp-ui
   :ensure t
