@@ -121,6 +121,8 @@
 ;;   :config
 ;;   (load-theme 'gruvbox t))
 
+(setq js-indent-level 2)
+
 (use-package zerodark-theme
   :ensure t
   :config
@@ -601,42 +603,12 @@
   :ensure t
   :mode "\\.json\\'")
 
-(use-package js2-mode
-  :ensure t
-  :after (prettier-js)
-  :mode "\\.js\\'"
-  :interpreter "node"
-  :init
-  (setq js-switch-indent-offset 2)
-  (setq js-indent-level 2)
-  (setq js2-basic-offset 2)
-  :hook (js2-mode . prettier-js-mode)
-  :config
-  (add-hook 'js2-mode-hook #'js2-refactor-mode)
-  (js2r-add-keybindings-with-prefix "C-c M-r")
-  (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
-  (define-key js-mode-map (kbd "M-.") nil))
-
 (use-package prettier-js
   :ensure t
   :init
-  (setq prettier-js-args '("--trailing-comma" "es5" "--single-quote")))
-
-(use-package web-mode
-  :ensure t
-  :mode "\\.tsx\\'"
-  :init
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-markup-indent-offset 2))
-
-(use-package rjsx-mode
-  :ensure t
-  :mode "\\.jsx\\'"
-  :after (prettier-js)
+  (setq prettier-js-args '("--trailing-comma" "es5" "--single-quote"))
   :config
-  :hook (rjsx-mode . prettier-js-mode))
+  (add-hook 'js-mode-hook 'prettier-js-mode))
 
 (use-package flycheck
   :ensure t
@@ -700,14 +672,12 @@
 
 ;;; Typescript
 (use-package tide
-  :after (flycheck company js2-mode)
+  :ensure t
   :init
   (setq typescript-indent-level 2)
   (setq tide-format-options '(:indentSize 2 :tabSize 2))
-
   :config
-  (add-hook 'js2-mode-hook (lambda () (tide-setup)))
-  (add-hook 'rjsx-mode-hook (lambda () (tide-setup))))
+  (add-hook 'js-mode-hook (lambda () (tide-setup))))
 
 ;;;; My utility functions!
 (defun acc/point-in-string-p (pt)
