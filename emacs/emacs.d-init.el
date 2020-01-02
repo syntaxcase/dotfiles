@@ -610,14 +610,14 @@
   :config
   (add-hook 'js-mode-hook 'prettier-js-mode))
 
-(use-package flycheck
-  :ensure t
-  :init
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  :config
-  (global-flycheck-mode)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-mode 'javascript-eslint 'js2-mode))
+;; (use-package flycheck
+;;   :ensure t
+;;   :init
+;;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+;;   :config
+;;   (global-flycheck-mode)
+;;   (flycheck-add-mode 'javascript-eslint 'web-mode)
+;;   (flycheck-add-mode 'javascript-eslint 'js2-mode))
 
 ;;; AsciiDoc mode
 (use-package adoc-mode
