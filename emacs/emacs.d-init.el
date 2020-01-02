@@ -175,6 +175,10 @@
   :ensure t
   :config (which-key-mode))
 
+(use-package free-keys
+  :ensure t
+  :commands free-keys)
+
 (use-package helpful
   :ensure t
   :bind (("C-h f" . helpful-callable)
