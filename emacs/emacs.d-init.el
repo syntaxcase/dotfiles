@@ -573,6 +573,10 @@
   :config
   (lsp-treemacs-sync-mode 1))
 
+(use-package go-mode
+  :ensure t
+  :mode  "\\.go\\'")
+
 (use-package lsp-mode
   :commands lsp
   :ensure t)
