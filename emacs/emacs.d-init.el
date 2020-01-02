@@ -20,7 +20,8 @@
                          ("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")))
 (require 'package)
-(package-initialize)
+(when (version< emacs-version "27.1")
+  (package-initialize))
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
