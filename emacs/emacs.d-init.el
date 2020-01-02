@@ -205,6 +205,7 @@
 ;; counsel
 (use-package counsel
   :ensure t
+  :after ivy
   :bind (("M-x" . counsel-M-x)
          ("M-y" . counsel-yank-pop)
          ("C-s" . counsel-grep-or-swiper)
@@ -224,7 +225,6 @@
 (use-package ivy
   :ensure t
   :demand t
-  :after (counsel)
   :bind (("C-c C-r" . ivy-resume)
          ("C-x b" . ivy-switch-buffer))
   :init
@@ -240,7 +240,6 @@
 
   ;; Make the prompt selectable with <up>
   (setq ivy-use-selectable-prompt t)
-
   :config
   (ivy-mode 1))
 
