@@ -586,7 +586,13 @@
   :after lsp-mode
   :hook (lsp-mode . lsp-ui-mode)
   :init
-  (setq lsp-ui-sideline-update-mode 'point))
+  (setq lsp-ui-sideline-update-mode 'point)
+  :config
+  (mapc (lambda (f) (set-face-foreground f "dim gray"))
+        '(lsp-ui-sideline-code-action
+          lsp-ui-sideline-current-symbol
+          lsp-ui-sideline-symbol
+          lsp-ui-sideline-symbol-info)))
 
 (use-package java-mode
   :mode "\\.java\\'")
