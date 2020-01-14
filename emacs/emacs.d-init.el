@@ -545,9 +545,11 @@
 
 (use-package yasnippet
   :ensure t
+  :after (:any lsp tide)
   :config
   (use-package yasnippet-snippets
-    :ensure t))
+    :ensure t)
+  (yas-global-mode 1))
 
 (use-package treemacs
   :ensure t
