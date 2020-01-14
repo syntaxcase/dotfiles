@@ -49,9 +49,6 @@
 (setenv "RUST_SRC_PATH" +rustc-src+)
 
 ;;;; Window configuration
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode -1)
 (setq inhibit-startup-screen t)
 (setq column-number-mode t)
 (show-paren-mode t)
@@ -906,6 +903,9 @@ point reaches the beginning or end of the buffer, stop there."
 (global-set-key (kbd "C-c m a") 'acc/beginning-of-string)
 (global-set-key (kbd "C-c m +") 'acc/increment-number-at-point)
 (global-set-key (kbd "C-c m {") 'acc/space-js-object)
+
+;; Reset GC threshold, it was set in ~/.emacs.d/early-init.el
+(setq gc-cons-threshold +old-gc-cons-threshold+)
 
 (provide '.emacs)
 
