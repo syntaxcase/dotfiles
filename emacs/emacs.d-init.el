@@ -738,6 +738,8 @@
   (add-hook 'js-mode-hook (lambda () (tide-setup))))
 
 (use-package smtpmail
+  :ensure t
+  :after mu4e
   :custom
   (user-mail-address "alessandro.carlo@chiri.co")
   (smtpmail-default-smtp-server "mail.gandi.net")
