@@ -661,12 +661,27 @@
   :ensure t
   :mode "\\.json\\'")
 
+;;; Javascript/Typescript
 (use-package prettier-js
   :ensure t
+  :after tide
   :init
   (setq prettier-js-args '("--trailing-comma" "es5" "--single-quote"))
   :config
   (add-hook 'js-mode-hook 'prettier-js-mode))
+
+(use-package tide
+  :ensure t
+  :commands tide-setup
+  :init
+  (setq typescript-indent-level 2)
+  (setq tide-format-options '(:indentSize 2 :tabSize 2)))
+
+;; HACK: I can't figure out a way to make tide depend on the built-in js-mode
+;; using only the `use-package' machinery. So to avoid having tide take half
+;; a second at startup it can be delayed on the `tide-setup' command, with
+;; the hook on js-mode (to invoke `tide-setup') set outside of `use-package'.
+(add-hook 'js-mode-hook (lambda () (tide-setup)))
 
 ;; (use-package flycheck
 ;;   :ensure t
@@ -727,15 +742,6 @@
 (use-package simple-httpd
   :ensure t
   :commands httpd-start)
-
-;;; Typescript
-(use-package tide
-  :ensure t
-  :init
-  (setq typescript-indent-level 2)
-  (setq tide-format-options '(:indentSize 2 :tabSize 2))
-  :config
-  (add-hook 'js-mode-hook (lambda () (tide-setup))))
 
 (use-package smtpmail
   :ensure t
