@@ -597,8 +597,10 @@
   :ensure t
   :after lsp-mode
   :hook (lsp-mode . lsp-ui-mode)
-  :init
-  (setq lsp-ui-sideline-update-mode 'point)
+  :custom
+  (lsp-ui-sideline-update-mode 'point)
+  (lsp-ui-doc-delay 1)
+  (lsp-ui-doc-position 'top)
   :config
   (mapc (lambda (f) (set-face-foreground f "dim gray"))
         '(lsp-ui-sideline-code-action
