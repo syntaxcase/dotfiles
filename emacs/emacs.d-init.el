@@ -483,6 +483,10 @@
  :after (org)
  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
+(use-package docker
+  :ensure t
+  :commands (docker))
+
 (use-package dockerfile-mode
   :ensure t
   :mode "Dockerfile\\'")
