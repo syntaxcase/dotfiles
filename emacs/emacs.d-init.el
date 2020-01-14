@@ -589,6 +589,8 @@
          (rust-mode . lsp-deferred)
          (java-mode . lsp-deferred)
          (dockerfile-mode . lsp-deferred))
+  :custom
+  (lsp-rust-clippy-preference "on")
   :commands (lsp lsp-deferred))
 
 (use-package lsp-ui
