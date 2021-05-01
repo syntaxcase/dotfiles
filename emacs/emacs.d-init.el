@@ -462,7 +462,9 @@
   :bind (("C-x g" . magit-status))
   :custom
   (magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
-  (magit-revision-show-gravatars t))
+  (magit-revision-show-gravatars t)
+  :config
+  (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell))
 
 (use-package magit-todos
   :straight t
@@ -504,6 +506,7 @@
    '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
   (org-catch-invisible-edits 'error)
   :config
+  (add-hook 'org-mode-hook 'flyspell-mode)
   (require 'ox-md)
   (add-to-list 'org-export-backends 'markdown)
 
