@@ -701,7 +701,11 @@
   (lsp-rust-server 'rust-analyzer)
   (lsp-prefer-capf t)
   (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-rust-analyzer-proc-macro-enable t)
+  (lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
   (lsp-modeline-diagnostics-enable t)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-go-build-flags ["-tags=integration"])
   :commands (lsp lsp-deferred))
 
 (use-package lsp-ui
