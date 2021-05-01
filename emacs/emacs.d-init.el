@@ -540,10 +540,6 @@
   :config
   (add-hook 'org-mode-hook 'toc-org-mode))
 
-;; (use-package ox-reveal
-;;  :straight t
-;;  :after (org))
-
 (use-package org-superstar
  :straight t
  :after (org)
@@ -568,26 +564,6 @@
   :straight t
   :after org-roam
   :commands org-roam-server-mode)
-
-;; (use-package lister
-;;   :straight (lister :type git
-;;                     :host github
-;;                     :repo "publicimageltd/lister"
-;;                     :branch "main"
-;;                     :files ("*.el")))
-
-;; (use-package delve
-;;   :straight (delve :type git
-;;                     :host github
-;;                     :repo "publicimageltd/delve"
-;;                     :branch "main"
-;;                     :files ("*.el"))
-;;   :config
-;;   (use-package delve-minor-mode
-;;     :config
-;;     (add-hook 'org-mode-hook #'delve-minor-mode-maybe-activate))
-;;   :bind
-;;   (("<f12>" . delve-open-or-select)))
 
 (use-package org-journal
   :straight t
@@ -674,10 +650,6 @@
          ("s-<f5>" . previous-error))
   :config
   (global-flycheck-mode))
-
-(use-package flycheck-rust
-  :straight t
-  :after flycheck)
 
 (use-package treemacs
   :straight t
