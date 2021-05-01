@@ -301,22 +301,13 @@ variants of Typescript.")
   (selectrum-prescient-mode +1))
 
 (use-package marginalia
-  :straight (marginalia :type git
-                        :host github
-                        :repo "minad/marginalia"
-                        :branch "main"
-                        :files ("*.el"))
-  :init
-  ;; Must be in the :init section of use-package such that the mode gets
-  ;; enabled right away. Note that this forces loading the package.
+  :straight t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light))
+  :config
   (marginalia-mode)
-
-  ;; Prefer richer, more heavy, annotations over the lighter default variant.
-  ;; E.g. M-x will show the documentation string additional to the keybinding.
-  ;; By default only the keybinding is shown as annotation.
-  ;; Note that there is the command `marginalia-cycle-annotators` to
-  ;; switch between the annotators.
-  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)))
+  (advice-add #'marginalia-cycle :after
+              (lambda () (when (bound-and-true-p selectrum-mode) (selectrum-exhibit 'keep-selected)))))
 
 (use-package consult
   :straight (consult :type git
