@@ -289,11 +289,14 @@ variants of Typescript.")
 
 (use-package prescient
   :straight t
-  :config (prescient-persist-mode +1))
+  :config
+  (prescient-persist-mode +1))
 
 (use-package selectrum-prescient
   :straight t
   :after (prescient selectrum)
+  :custom
+  (selectrum-prescient-enable-filtering nil)
   :config
   (selectrum-prescient-mode +1))
 
