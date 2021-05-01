@@ -202,17 +202,10 @@
   :config
   (minions-mode 1))
 
-(use-package doom-modeline
+(use-package mood-line
   :straight t
-  :hook (after-init . doom-modeline-mode)
-  :custom
-  (doom-modeline-major-mode-icon nil)
-  (doom-modeline-env-enable-python nil)
-  (doom-modeline-env-enable-go nil)
-  (doom-modeline-env-enable-rust nil)
-  (doom-modeline-env-enable-elixir nil)
-  (doom-modeline-minor-modes t)
-  (doom-modeline-icon t))
+  :config
+  (mood-line-mode))
 
 (use-package which-key
   :straight t
