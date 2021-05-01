@@ -177,9 +177,9 @@
   (modus-themes-load-vivendi))
 
 (use-package unicode-fonts
-   :ensure t
-   :config
-   (unicode-fonts-setup))
+  :straight t
+  :config
+  (unicode-fonts-setup))
 
 (use-package uniquify
   ; don't :ensure, provided by emacs
