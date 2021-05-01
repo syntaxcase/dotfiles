@@ -166,24 +166,15 @@
 
 (straight-use-package 'use-package)
 
-(use-package doom-themes
+(use-package modus-themes
   :straight t
-  :custom
-  ;; Global settings (defaults)
-  (doom-themes-enable-bold t)    ; if nil, bold is universally disabled
-  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  :demand t
+  :init
+  ;; Load the theme files before enabling a theme (else you get an error).
+  (modus-themes-load-themes)
   :config
-  (load-theme 'doom-one t)
-
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-
-  ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-  (doom-themes-treemacs-config)
-
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+  ;; Load the theme of your choice:
+  (modus-themes-load-vivendi))
 
 (use-package unicode-fonts
    :ensure t
