@@ -685,6 +685,8 @@
 (use-package lsp-mode
   :straight t
   :after company
+  :bind-keymap
+  ("C-c d" . lsp-command-map)
   :hook ((lsp-mode . lsp-enable-which-key-integration)
          (lsp-mode . lsp-lens-mode)
          (go-mode . lsp-deferred)
