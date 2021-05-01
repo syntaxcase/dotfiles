@@ -250,22 +250,27 @@
     ("p" flymake-goto-prev-error)
     ("q" nil)))
 
+;; Fix tsx syntax in tree-sitter, thanks to
+;; https://github.com/ubolonton/emacs-tree-sitter/issues/66#issuecomment-778692779
+(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+  "Major mode for editing TSX files.
 
-;; (use-package tree-sitter
-;;   :straight (tree-sitter :type git
-;;                          :host github
-;;                          :repo "ubolonton/emacs-tree-sitter"
-;;                          :files ("lisp/*.el"))
-;;   :config
-;;   (add-to-list 'tree-sitter-major-mode-language-alist
-;;                '(rustic-mode . rust)))
+Refer to Typescript documentation for syntactic differences between normal and TSX
+variants of Typescript.")
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
 
-;; (use-package tree-sitter-langs
-;;   :straight (tree-sitter-langs :type git
-;;                                :host github
-;;                                :repo "ubolonton/emacs-tree-sitter"
-;;                                :files ("langs/*.el" "langs/queries"))
-;;   :after tree-sitter)
+(use-package tree-sitter
+  :straight t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :straight t
+  :after tree-sitter
+  :config
+  (tree-sitter-require 'tsx)
+  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
 
 (use-package selectrum
   :straight t
