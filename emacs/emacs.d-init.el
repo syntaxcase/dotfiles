@@ -343,11 +343,11 @@
          ("M-g f" . avy-goto-line))
   :config (avy-setup-default))
 
-(use-package volatile-highlights
+(use-package goggles
   :straight t
-  :hook (after-init . volatile-highlights-mode)
   :config
-  (volatile-highlights-mode t))
+  (goggles-mode)
+  (setq-default goggles-pulse nil))
 
 (use-package fic-mode
   :straight t
