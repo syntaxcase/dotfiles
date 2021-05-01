@@ -86,6 +86,9 @@
 ;; I always want to kill the current buffer!
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 
+;; Bind view-mode to F12
+(global-set-key (kbd "<f12>") 'view-mode)
+
 ;;;; Window configuration
 (setq inhibit-startup-screen t)
 (setq column-number-mode t)
