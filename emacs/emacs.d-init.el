@@ -644,10 +644,6 @@
 
 (use-package flycheck
   :straight t
-  ;; :init
-  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  :bind (("s-<f6>" . next-error)
-         ("s-<f5>" . previous-error))
   :config
   (global-flycheck-mode))
 
