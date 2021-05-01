@@ -836,7 +836,7 @@
 
 ;;; Groovy
 (use-package groovy-mode
-  :ensure    t
+  :straight t
   :mode      "\\.\\(groovy\\|gradle\\)$")
 
 ;; Set up the basic Elixir mode.
