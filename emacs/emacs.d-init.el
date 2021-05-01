@@ -191,16 +191,6 @@
   ; don't muck with special buffers
   (setq uniquify-ignore-buffers-re "^\\*"))
 
-(use-package bufler
-  :straight t
-  :bind (("C-x C-b" . bufler)
-         ("C-x b" . bufler-workspace-switch-buffer)))
-
-;; (use-package persistent-scratch
-;;   :straight t
-;;   :config
-;;   (persistent-scratch-setup-default))
-
 (use-package expand-region
   :straight t
   :bind ("C-=" . er/expand-region))
