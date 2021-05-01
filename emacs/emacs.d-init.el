@@ -77,6 +77,9 @@
 ;;;; period single space ends sentence
 (setq sentence-end-double-space nil)
 
+;;;; the minibuffer stays in the frame that created it
+(setq minibuffer-follows-selected-frame nil)
+
 ;;;; disable suspend
 (global-unset-key (kbd "C-z"))
 
