@@ -1,6 +1,3 @@
-;; Store default `gc-cons-threshold' value
-(defvar +old-gc-cons-threshold+ gc-cons-threshold)
-
 ;; Disable garbage collection for startup
 (setq gc-cons-threshold most-positive-fixnum)
 

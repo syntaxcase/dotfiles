@@ -4,10 +4,8 @@
 
 ;;; Code:
 ;;; GC every 20MB allocated (instead of the default 0.76MB)
-;(setq +old-gc-cons-threshold+ gc-cons-threshold)
 (setq gc-cons-threshold 6400000)
-; (add-hook 'focus-out-hook 'garbage-collect)
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq read-process-output-max (* 1024 1024)) ;; 1MB
 
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file :noerror)
