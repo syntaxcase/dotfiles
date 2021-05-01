@@ -15,6 +15,8 @@
 
 (setq frame-resize-pixelwise t)
 
+(setq inhibit-compacting-font-caches t)
+
 ;; Make straight fly at boot: https://github.com/raxod502/straight.el#my-init-time-got-slower
 (customize-set-variable 'straight-check-for-modifications '(watch-files find-when-checking))
 
