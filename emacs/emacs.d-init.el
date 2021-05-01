@@ -313,18 +313,20 @@ variants of Typescript.")
   :straight (consult :type git
                      :host github
                      :repo "minad/consult"
+                     :branch "main"
                      :files ("*.el"))
   ;; Replace bindings. Lazily loaded due to use-package.
   :bind (("C-c h" . consult-history)
          ("C-c o" . consult-outline)
+         ("C-x b" . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-x 5 b" . consult-buffer-other-frame)
          ("C-x r x" . consult-register)
          ("C-x r b" . consult-bookmark)
+         ("M-g g" . consult-goto-line)
          ("M-g o" . consult-outline) ;; "M-s o" is a good alternative
          ("M-g m" . consult-mark)    ;; "M-s m" is a good alternative
          ("M-g l" . consult-line)    ;; "M-s l" is a good alternative
-         ("M-s m" . consult-multi-occur)
          ("M-y" . consult-yank-pop)
          ("<help> a" . consult-apropos))
 
@@ -332,14 +334,33 @@ variants of Typescript.")
   :init
 
   ;; Replace functions (consult-multi-occur is a drop-in replacement)
-  (fset 'multi-occur #'consult-multi-occur)
+  (fset 'multi-occur #'consult-multi-occur))
 
-  ;; Configure other variables and modes in the :config section, after lazily loading the package
-  :config
+(use-package consult-flycheck
+  :straight consult
+  :after flycheck
+  :bind (:map flycheck-command-map
+              ("!" . consult-flycheck)))
 
-  ;; Optionally enable previews. Note that individual previews can be disabled
-  ;; via customization variables.
-  (consult-preview-mode))
+(use-package consult-lsp
+  :straight t
+  :after lsp-mode
+  :bind ([remap xref-find-apropos] . #'consult-lsp-symbols))
+
+(use-package embark
+  :straight t
+  :bind
+  ("C-S-a" . embark-act))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :straight t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . embark-consult-preview-minor-mode))
 
 (use-package ctrlf
   :straight t
