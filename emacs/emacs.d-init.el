@@ -277,6 +277,16 @@ variants of Typescript.")
   :config
   (selectrum-mode))
 
+(use-package orderless
+  :straight t
+  :after selectrum
+  :custom
+  ;; Optional performance optimization
+  ;; by highlighting only the visible candidates.
+  (orderless-skip-highlighting (lambda () selectrum-is-active))
+  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+  (completion-styles '(orderless)))
+
 (use-package prescient
   :straight t
   :config (prescient-persist-mode +1))
