@@ -406,6 +406,7 @@
   (company-tooltip-align-annotations t)
   (company-dabbrev-downcase nil)
   (company-show-numbers t)
+  (company-format-margin-function #'company-vscode-dark-icons-margin)
   :config
   (global-company-mode))
 
