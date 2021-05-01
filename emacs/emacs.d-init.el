@@ -827,7 +827,7 @@
 
 ;;; plantuml
 (use-package plantuml-mode
-  :ensure t
+  :straight t
   :mode "\\.plantuml\\'"
   :custom
   (plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
