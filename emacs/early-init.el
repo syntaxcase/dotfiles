@@ -9,6 +9,8 @@
 (when (fboundp 'set-scroll-bar-mode)
   (set-scroll-bar-mode nil))
 
+(add-to-list 'default-frame-alist '(undecorated . t))
+
 ;; Do not resize at startup based on the font size
 (setq frame-inhibit-implied-resize t)
 (setq inhibit-startup-echo-area-message t)
