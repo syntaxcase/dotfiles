@@ -383,7 +383,7 @@
 (use-package goto-chg
   :straight t
   :commands goto-last-change
-  :bind (("s-." . goto-last-change)
+  :bind (("s-/" . goto-last-change)
          ("s-," . goto-last-change-reverse)))
 
 (use-package smartparens
