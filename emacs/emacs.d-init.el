@@ -238,10 +238,11 @@
   :config
   (mood-line-mode))
 
-(use-package which-key
-  :straight t
-  :hook (after-init . which-key-mode)
-  :config (which-key-mode))
+;; (use-package which-key
+;;  :straight t
+;;  :hook (after-init . which-key-mode)
+;;  :config
+;;  (which-key-mode))
 
 (use-package helpful
   :straight t
