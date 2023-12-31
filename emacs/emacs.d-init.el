@@ -180,8 +180,6 @@
   ;; (setq flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face))
   ;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-  ;; handle long lines better
-  (global-so-long-mode 1))
 
 (use-package flymake
   :straight (:type built-in)
