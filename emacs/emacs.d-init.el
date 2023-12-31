@@ -1052,6 +1052,13 @@ point reaches the beginning or end of the buffer, stop there."
     (delete-region beg end)
     (insert (nreverse region))))
 
+;; `base64-decode-region' supports not inserting line breaks, but not when called interactively (as far as I can tell),
+;; so here's a variation that never inserts line breaks.
+;; Thanks to https://emacs.stackexchange.com/a/41224
+(defun acc/base64-encode-region-no-breaklines ()
+  (interactive)
+  (base64-encode-region (mark) (point) t))
+
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
                 'acc/smarter-move-beginning-of-line)
