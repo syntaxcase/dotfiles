@@ -180,6 +180,9 @@
   ;; (setq flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face))
   ;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
+  ;; project.el: additional project directory markers
+  (setq project-vc-extra-root-markers '( ".project.el" ".projectile" ))
+
 
 (use-package flymake
   :straight (:type built-in)
