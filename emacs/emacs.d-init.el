@@ -75,9 +75,6 @@
   ;;; Silence the warnings from native-comp
   (setq native-comp-async-report-warnings-errors nil)
 
-  ;; Set the path for tree-sitter's language definitions
-  (setq treesit-extra-load-path '("/home/acc/.emacs.d/tree-sitter/dist"))
-
   ;; emacs confirm closing
   (setq confirm-kill-emacs 'yes-or-no-p)
 
@@ -190,6 +187,27 @@
   :straight (:type built-in)
   :hook (prog-mode . flymake-mode))
 
+(use-package treesit
+  :straight (:type built-in)
+  :custom
+  ;; Set the path for tree-sitter's language definitions
+  (treesit-extra-load-path '("/home/acc/.emacs.d/tree-sitter/dist"))
+  :config
+  ;; Replace relevant modes with the treesitter variant
+  (dolist (mode
+           '((bash-mode       . bash-ts-mode)
+             (c-mode          . c-ts-mode)
+             (c++-mode        . c++-ts-mode)
+             (c-or-c++-mode   . c-or-c++-ts-mode)
+             (css-mode        . css-ts-mode)
+             ;; (dockerfile-mode . dockerfile-ts-mode)
+             ;; (go-mode         . go-ts-mode)
+             (javascript-mode . js-ts-mode)
+             (js-json-mode    . json-ts-mode)
+             (clojure-mode    . clojure-ts-mode)
+             ;; (typescript-mode . typescript-ts-mode)
+             ))
+    (add-to-list 'major-mode-remap-alist mode)))
 (use-package modus-themes
   :straight (modus-themes :host github :repo "protesilaos/modus-themes")
   :config
