@@ -16,13 +16,14 @@
 
   home-manager.users.ha = { pkgs, ... }: {
     imports = [ inputs.quadlet-nix.homeManagerModules.quadlet ];
+
     # This is crucial to ensure the systemd services are (re)started on config change
     systemd.user.startServices = "sd-switch";
 
     virtualisation.quadlet = {
-      networks = {
-        ha = {};
-      };
+      # networks = {
+      #   ha = {};
+      # };
       containers = {
         zwave-js-ui = {
           autoStart = true;
@@ -31,10 +32,10 @@
           };
           containerConfig = {
             image = "registry.hub.docker.com/zwavejs/zwave-js-ui:latest";
-            publishPorts = [ "0.0.0.0:8091:8091" ];
+            publishPorts = [ "0.0.0.0:8091:8091" "3000:3000" ];
             userns = "keep-id";
-            networks = [ "ha" ];
-            # devices = [ "/dev/ZWAVE:/dev/zwave" ];
+            networks = [ "host" ];
+            devices = [ "/dev/ZWAVE:/dev/zwave" ];
             volumes = [ "/home/ha/zwave-js/store:/usr/src/app/store" ];
             addGroups = [ "keep-groups" ];
           };
