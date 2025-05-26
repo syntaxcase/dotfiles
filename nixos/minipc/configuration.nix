@@ -25,6 +25,9 @@
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -183,4 +186,3 @@
   system.stateVersion = "24.11"; # Did you read the comment?
 
 }
-
