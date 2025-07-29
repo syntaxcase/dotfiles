@@ -18,8 +18,14 @@
 
 ;; Do not resize at startup based on the font size
 (setq frame-inhibit-implied-resize t)
+
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-screen t)
+;; suppress the vanilla startup screen completely. we've disabled it with
+;; `inhibit-startup-screen', but it would still initialize anyway.
+(advice-add #'display-startup-screen :override #'ignore)
+
+(setq initial-scratch-message ";; Scratch\n\n")
 
 (setq window-resize-pixelwise t)
 
