@@ -37,5 +37,8 @@
 (setq ring-bell-function #'ignore)
 (setq visible-bell nil)
 
+;; Don't ping things that look like domain names.
+(setq ffap-machine-p-known 'reject)
+
 (provide 'early-init)
 ;;; early-init.el ends here
