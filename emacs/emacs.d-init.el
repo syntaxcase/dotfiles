@@ -13,24 +13,46 @@
 
 (setq inhibit-compacting-font-caches t)
 
-;; Make straight fly at boot: https://github.com/raxod502/straight.el#my-init-time-got-slower
-(customize-set-variable 'straight-check-for-modifications '(watch-files find-when-checking))
-(customize-set-variable 'straight-repository-branch "develop")
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(straight-use-package 'use-package)
+;;;; Elpaca installer, copied from its docs.
+(defvar elpaca-installer-version 0.11)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (<= emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
+;;;; End elpaca installer.
 
 (eval-when-compile
   (require 'use-package))
@@ -39,103 +61,71 @@
 (setq use-package-verbose t)
 (setq use-package-compute-statistics t)
 
-;;; font selection
-;; (if (eq system-type 'darwin)
-;;     (set-face-attribute 'default nil :font "Monaco-16")
-;;                                         ; (set-face-attribute 'default nil :font "Ubuntu Mono" :height 138)
-;;   (set-face-attribute 'default nil :font "JetBrains Mono" :height 120)
-;;   ;(set-face-attribute 'default nil :font "Iosevka" :height 143)
-;;   )
+(elpaca elpaca-use-package
+  ;;Enable Elpaca's use-package support
+  (elpaca-use-package-mode))
+;; Block until package is installed/activated so we can use it at the top-level below.
+(elpaca-wait)
 
-;; Fix the emoji font problem when using emacsclient
-;; thanks to: https://blog.mudit.xyz/posts/angels-and-daemons-a-tale-of-emojis-in-emacs
-;; (defun acc/set-emoji-font ()
-;;   ;; (set-fontset-font "fontset-default" 'emoji
-;;   ;;                   '("Noto Color Emoji" . "iso10646-1") nil 'prepend)
-;;   (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'prepend))
-
-;; ;; Call the config function once and then remove the handler
-;; (defun acc/set-emoji-font-in-frame (frame)
-;;   (with-selected-frame frame
-;;     (acc/set-emoji-font))
-
-;;   ;; Unregister this hook once it's run
-;;   (remove-hook 'after-make-frame-functions
-;;                #'acc/set-emoji-font-in-frame))
-
-;; ;; Attach the function to the hook only if in Emacs server
-;; ;; otherwise just call the config function directly
-;; (if (daemonp)
-;;     (add-hook 'after-make-frame-functions
-;;               #'acc/set-emoji-font-in-frame)
-;;   (acc/set-emoji-font))
+(defvar my-backup-files-dir "~/.emacs.d/backup-files")
 
 (use-package emacs
-  :init
-  ;;; Silence the warnings from native-comp
-  (setq native-comp-async-report-warnings-errors nil)
-
-  ;; emacs confirm closing
-  (setq confirm-kill-emacs 'yes-or-no-p)
-
+  :ensure nil
+  :custom
+  ;; Silence the warnings from native-comp
+  (native-comp-async-report-warnings-errors nil)
+  (confirm-kill-emacs 'yes-or-no-p)
   ;; period single space ends sentence
-  (setq sentence-end-double-space nil)
+  (sentence-end-double-space nil)
 
-  ;; the minibuffer stays in the frame that created it
-  (setq minibuffer-follows-selected-frame nil)
-
-  ;; disable suspend
-  (global-unset-key (kbd "C-z"))
-
-  ;; I always want to kill the current buffer!
-  (global-set-key (kbd "C-x k") 'kill-this-buffer)
-
-  ;; Bind view-mode to F12
-  (global-set-key (kbd "<f12>") 'view-mode)
-
-  ;; Window configuration
-  (setq column-number-mode t)
-  (setq show-paren-context-when-offscreen 'child-frame)
-  (show-paren-mode t)
-
+  ;; Isearch
   ;; Allow isearch motion with M-<, M->, C-v and M-v. New in emacs 28
-  (setq isearch-allow-motion t)
-  (setq isearch-lazy-count t)
+  (isearch-allow-motion t)
+  ;; show the number of matches
+  (isearch-lazy-count t)
+  ;; but do prefix the number
+  (lazy-count-prefix-format nil)
+  ;; append it
+  (lazy-count-suffix-format "   (%s/%s)")
 
-  ;; Kill the previous dired buffer when selecting a new directory. New in emacs 28
-  (setq dired-kill-when-opening-new-dired-buffer t)
+  (show-paren-context-when-offscreen 'child-frame)
 
   ;; expand kill-ring size
-  (setq kill-ring-max 500)
+  (kill-ring-max 500)
+
+  ;; rename via git
+  (dired-vc-rename-file t)
+
+  ;; Kill the previous dired buffer when selecting a new directory. New in emacs 28
+  (dired-kill-when-opening-new-dired-buffer t)
+
+  ;; paste from mouse where the point is, not where the mouse pointer is
+  (mouse-yank-at-point t)
+
+  ;; Backup and auto-save files
+  (backup-directory-alist `(("." . ,my-backup-files-dir)))
+  (auto-save-file-name-transforms `((".*" ,my-backup-files-dir t)))
+  (delete-old-versions t)
+  (kept-new-versions 6)
+  (kept-old-versions 2)
+  (version-control t)
+
+  ;; project.el: additional project directory markers
+  (project-vc-extra-root-markers '( ".project.el" ".projectile" ))
+
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+
+  :init
+  ;; the minibuffer stays in the frame that created it
+  (setq minibuffer-follows-selected-frame nil)
 
   ;; Enable narrowing
   (put 'narrow-to-region 'disabled nil)
 
   ;; Stretch cursor to cover long characters (like TABs)
   (setq x-stretch-cursor t)
-
-  ;; paste from mouse where the point is, not where the mouse pointer is
-  (setq mouse-yank-at-point t)
-
-  ;; Revert a buffer if the corresponding file changes on disk
-  (global-auto-revert-mode 1)
-
-  ;; Enable recentf-mode
-  (recentf-mode 1)
-
-  ;; Enable pixel-scroll-precision-mode
-  (pixel-scroll-precision-mode 1)
-
-  ;;; Enable tab-bar-mode by default
-  ;; (use-package tab-bar
-  ;;   :custom
-  ;;   (tab-bar-show t)
-  ;;   (tab-bar-new-tab-to 'rightmost)
-  ;;   (tab-bar-new-tab-choice "*scratch*")
-  ;;   (tab-bar-close-button-show nil)
-  ;;   (tab-bar-tab-hints t)
-  ;;   :config
-  ;;   (tab-bar-mode 1))
 
   ;; set tab width
   (setq tab-width 2)
@@ -149,6 +139,9 @@
   ;; default to 100 columns
   (setq-default fill-column 100)
 
+  ;; Echo keystrokes in the modeline as fast as possible
+  (setq echo-keystrokes .1)
+
   ;; Don't use native GTK tooltips
   (setq use-system-tooltips nil)
 
@@ -157,42 +150,80 @@
         (list (format "%s %%S: %%j " (system-name))
               '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
-  ;; Backup and auto-save files
-  (defvar my-backup-files-dir "~/.emacs.d/backup-files")
-  (setq backup-directory-alist `(("." . ,my-backup-files-dir)))
-  (setq delete-old-versions t
-        kept-new-versions 6
-        kept-old-versions 2
-        version-control t)
-
-  (setq auto-save-file-name-transforms
-        `((".*" ,my-backup-files-dir t)))
-
   ;; Save whatever’s in the current (system) clipboard before
   ;; replacing it with the Emacs’ text.
   ;; https://github.com/dakrone/eos/blob/master/eos.org
   (setq save-interprogram-paste-before-kill t)
 
-  ;; always enable subword-mode when programming
-  (add-hook 'prog-mode-hook #'subword-mode)
-
   ;; flyspell
   ;; (setq flyspell-prog-text-faces '(font-lock-comment-face font-lock-doc-face))
   ;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-  ;; project.el: additional project directory markers
-  (setq project-vc-extra-root-markers '( ".project.el" ".projectile" ))
+  :config
+  ;; always enable subword-mode when programming
+  (add-hook 'prog-mode-hook #'subword-mode)
 
+  (global-set-key (kbd "C-x j") #'duplicate-dwim)
 
-(use-package flymake
-  :straight (:type built-in)
-  :hook (prog-mode . flymake-mode))
+  ;; disable suspend
+  (global-unset-key (kbd "C-z"))
+
+  ;; I always want to kill the current buffer!
+  (global-set-key (kbd "C-x k") 'kill-current-buffer)
+
+  ;; Bind view-mode to F12
+  ;; (global-set-key (kbd "<f12>") 'view-mode)
+
+  ;; Revert a buffer if the corresponding file changes on disk
+  (global-auto-revert-mode 1)
+
+  ;; Enable recentf-mode
+  (recentf-mode 1)
+
+  ;; Enable pixel-scroll-precision-mode
+  (pixel-scroll-precision-mode 1)
+
+  (show-paren-mode t))
+
+(use-package emacs
+  :ensure nil
+  :init
+  (setq server-client-instructions nil)
+  :config
+  (require 'server)
+  (unless (server-running-p)
+    (server-start)))
+
+(use-package emacs
+  :ensure nil
+  :config
+  (require-theme 'modus-themes)
+  (load-theme 'modus-vivendi-tinted :no-confirm))
+
+;;; Enable tab-bar-mode by default
+(use-package tab-bar
+  :ensure nil
+  :custom
+  (tab-bar-show t)
+  (tab-bar-auto-width nil)
+  (tab-bar-new-tab-to 'rightmost)
+  (tab-bar-new-tab-choice "*scratch*")
+  (tab-bar-close-button-show nil)
+  (tab-bar-tab-hints nil)
+  :config
+  (tab-bar-mode 1))
+
+(use-package which-key
+  :ensure nil
+  :hook (after-init . which-key-mode))
 
 (use-package treesit
-  :straight (:type built-in)
+  :ensure nil
   :custom
   ;; Set the path for tree-sitter's language definitions
   (treesit-extra-load-path '("/home/acc/.emacs.d/tree-sitter/dist"))
+  (treesit-font-lock-level 4)
+  (java-ts-mode-indent-offset 2)
   :config
   ;; Replace relevant modes with the treesitter variant
   (dolist (mode
@@ -201,57 +232,52 @@
              (c++-mode        . c++-ts-mode)
              (c-or-c++-mode   . c-or-c++-ts-mode)
              (css-mode        . css-ts-mode)
-             ;; (dockerfile-mode . dockerfile-ts-mode)
-             ;; (go-mode         . go-ts-mode)
              (javascript-mode . js-ts-mode)
              (js-json-mode    . json-ts-mode)
-             (clojure-mode    . clojure-ts-mode)
-             ;; (typescript-mode . typescript-ts-mode)
-             ))
-    (add-to-list 'major-mode-remap-alist mode)))
-(use-package modus-themes
-  :straight (modus-themes :host github :repo "protesilaos/modus-themes")
-  :config
-  (load-theme 'modus-vivendi-tinted :no-confirm))
+             (clojure-mode    . clojure-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mode))
+  (add-to-list 'treesit-language-source-alist '(erlang "https://github.com/WhatsApp/tree-sitter-erlang")))
+
+(use-package transient
+  :ensure t)
 
 (use-package uniquify
-  :straight (:type built-in)
+  :ensure nil
   :config
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-separator "/")
   ;; rename after killing uniquified
-  (setq uniquify-after-kill-buffer-p t)
+  (setq uniquify-after-kill-buffer-flag t)
   ;; don't muck with special buffers
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 (use-package eldoc
-  :straight (:type built-in)
+  :ensure nil
   :config
   (global-eldoc-mode))
 
-(use-package expand-region
-  :straight t
-  :bind ("C-=" . er/expand-region))
+;; Expand-region replacement based on tree-sitter
+(use-package expreg
+  :ensure (expreg :host github :repo "casouri/expreg")
+  :bind ("C-=" . expreg-expand))
+
+;; (use-package expand-region
+;;   :ensure t
+;;   :bind ("C-=" . er/expand-region))
 
 (use-package mood-line
-  :straight t
+  :ensure t
   :config
   (mood-line-mode))
 
-;; (use-package which-key
-;;  :straight t
-;;  :hook (after-init . which-key-mode)
-;;  :config
-;;  (which-key-mode))
-
 (use-package helpful
-  :straight t
+  :ensure t
   :bind (("C-h f" . helpful-callable)
          ("C-h k" . helpful-key)
          ("C-h v" . helpful-variable)))
 
 (use-package multiple-cursors
-  :straight t
+  :ensure t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -259,47 +285,66 @@
 
 ;; ace-window
 (use-package ace-window
-  :straight t
+  :ensure t
   :custom
   (aw-scope 'frame)
   :bind ("M-o" . ace-window))
 
 (use-package envrc
-  :straight t
+  :ensure t
   :hook (after-init . envrc-global-mode))
 
 (use-package vertico
-  :straight (vertico :host github :repo "minad/vertico")
+  :ensure (vertico :host github :repo "minad/vertico")
   :config
-  (vertico-mode))
+  (vertico-mode)
+  (vertico-multiform-mode)
+  (vertico-indexed-mode)
+  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+  (add-to-list 'vertico-multiform-categories '(jinx grid (vertico-grid-annotate . 20) (vertico-count . 4))))
+
+(use-package prescient
+  :ensure t)
+
+(use-package vertico-prescient
+  :ensure t
+  :after (prescient vertico))
 
 (use-package savehist
-  :straight (:type built-in)
+  :ensure nil
   :init
   (savehist-mode))
 
 (use-package orderless
-  :straight t
+  :ensure t
   :after vertico
   :init
   (setq completion-styles '(orderless basic))
   (setq completion-category-defaults nil)
-  (setq completion-category-overrides '((file (styles partial-completion)))))
-  
-(use-package all-the-icons
-  :straight t)
-
-(use-package all-the-icons-completion
-  :straight t
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup))
+  (setq completion-category-overrides '((file (styles )))))
 
 (use-package marginalia
-  :straight t
+  :ensure t
   :config
   (marginalia-mode))
 
+(use-package nerd-icons
+  :ensure t)
+
+(use-package nerd-icons-completion
+  :ensure t
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+(use-package nerd-icons-dired
+  :ensure t
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
 (use-package consult
-  :straight t
+  :ensure t
   ;; Replace bindings. Lazily loaded due to use-package.
   :bind (("C-c h" . consult-history)
          ("C-x b" . consult-buffer)
@@ -313,7 +358,6 @@
          ("M-g g" . consult-goto-line)
          ("M-g o" . consult-outline) ;; "M-s o" is a good alternative
          ("M-g m" . consult-mark)    ;; "M-s m" is a good alternative
-         ("M-g l" . consult-line)    ;; "M-s l" is a good alternative
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
          ("M-s r" . consult-ripgrep)
@@ -330,70 +374,86 @@
   (setq completion-in-region-function #'consult-completion-in-region))
 
 (use-package consult-lsp
-  :straight t
+  :ensure t
   :after lsp-mode
   :bind ([remap xref-find-apropos] . #'consult-lsp-symbols))
 
 (use-package embark
-  :straight t
+  :ensure t
   :bind
-  ("C-S-a" . embark-act))
+  ("C-S-a" . embark-act)
+  :init
+  (setq embark-indicators
+        '(embark-minimal-indicator  ; default is embark-mixed-indicator
+          embark-highlight-indicator
+          embark-isearch-highlight-indicator))
+  ;; Setting this in an `:init' block to make it work right from boot
+  ;; or it'll work only after embark is loaded via the keybinding above.
+  (setq prefix-help-command #'embark-prefix-help-command))
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
-  :straight t
+  :ensure t
   :after (embark consult)
   :hook
   (embark-collect-mode . embark-consult-preview-minor-mode))
 
-(use-package ctrlf
-  :straight t
-  :bind
-  (("C-s" . ctrlf-forward-default)
-   ("C-r" . ctrlf-backward-default))
-  :config
-  (ctrlf-mode +1))
+(use-package flycheck
+  :ensure t
+  :hook (prog-mode . flycheck-mode))
+
+(use-package consult-flycheck
+  :ensure t
+  :after flycheck
+  :bind (:map flycheck-command-map
+              ("!" . consult-flycheck)))
+
+(use-package flyover
+  :ensure (:host github :repo "konrad1977/flyover" :branch "main" :files ("flyover.el"))
+  :hook (flycheck-mode . flyover-mode))
 
 (use-package avy
-  :straight t
-  :bind (("C-'" . avy-goto-char)
-         ("C-c '" . avy-goto-char-2)
-         ("M-g f" . avy-goto-line)))
+  :ensure t
+  :custom (avy-all-windows nil)
+  :bind (("M-g '" . avy-goto-char)
+         ("M-g \"" . avy-goto-char-2)
+         ("M-g f" . avy-goto-line)
+         ("M-g t" . avy-goto-char-timer)))
 
 (use-package jinx
-  :straight t
+  :ensure t
   :hook ((text-mode . jinx-mode)
          (conf-mode . jinx-mode))
   :bind ([remap ispell-word] . jinx-correct))
 
 (use-package apheleia
-  :straight t
+  :ensure t
   :hook ((go-ts-mode . apheleia-mode)
-         (elixir-ts-mode . apheleia-mode)
+         ;;; (elixir-ts-mode . apheleia-mode)
          (rust-ts-mode . apheleia-mode)))
 
 (use-package goggles
-  :straight t
+  :ensure t
   :hook ((prog-mode text-mode) . goggles-mode)
   :config
   (setq-default goggles-pulse nil))
 
 (use-package iedit
-  :straight t
-  :bind ("C-;". iedit-mode))
+  :ensure t
+  :bind ("C-;" . iedit-mode))
 
 (use-package goto-chg
-  :straight t
+  :ensure t
   :commands goto-last-change
   :bind (("s-/" . goto-last-change)
          ("s-," . goto-last-change-reverse)))
 
 (use-package smartparens
-  :straight t
+  :ensure t
   :config
   (use-package smartparens-config)
-  :hook (((go-ts-mode python-ts-mode js-ts-mode rust-ts-mode sql-mode) . smartparens-mode)
-         ((clojure-mode lisp-interaction-mode emacs-lisp-mode elixir-ts-mode) . smartparens-strict-mode))
+  :hook (((go-ts-mode python-ts-mode js-ts-mode rust-ts-mode sql-mode elixir-ts-mode) . smartparens-mode)
+         ((clojure-ts-mode lisp-interaction-mode emacs-lisp-mode) . smartparens-strict-mode))
   :bind
   (("C-M-k" . sp-kill-sexp-with-a-twist-of-lime)
    ("C-M-f" . sp-forward-sexp)
@@ -410,42 +470,44 @@
    ("M-J" . sp-join-sexp)
    ("C-M-t" . sp-transpose-sexp)))
 
-;; (use-package company
-;;   :straight t
-;;   :custom
-;;   (company-idle-delay 0.2)
-;;   (company-minimum-prefix-length 2)
-;;   (company-tooltip-align-annotations t)
-;;   (company-dabbrev-downcase nil)
-;;   (company-show-numbers t)
-;;   (company-format-margin-function #'company-vscode-dark-icons-margin)
-;;   :config
-;;   (global-company-mode))
-
-;; (use-package company-quickhelp
-;;   :after company
-;;   :straight t
-;;   :bind (:map company-active-map
-;;               ("C-c h" . #'company-quickhelp-manual-begin))
-;;   :config
-;;   (company-quickhelp-mode 1))
-
-(use-package corfu
-  :straight (corfu :type git :host github :repo "minad/corfu")
+(use-package company
+  :ensure t
   :custom
-  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  ;; (corfu-separator ?\s)          ;; Orderless field separator
-  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
-  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-  (corfu-auto-prefix 2)
+  (company-idle-delay 0.2)
+  (company-minimum-prefix-length 2)
+  (company-tooltip-align-annotations t)
+  (company-dabbrev-downcase nil)
+  (company-show-numbers t)
+  (company-format-margin-function #'company-vscode-dark-icons-margin)
+  :hook (prog-mode . company-mode))
+
+(use-package company-quickhelp
+  :after company
+  :ensure t
+  :bind (:map company-active-map
+              ("C-c h" . #'company-quickhelp-manual-begin))
   :config
-  (global-corfu-mode))
+  (company-quickhelp-mode 1))
+
+(use-package company-prescient
+  :ensure t
+  :after (prescient company))
+
+;; (use-package corfu
+;;   :ensure t
+;;   :custom
+;;   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+;;   (corfu-auto t)                 ;; Enable auto completion
+;;   ;; (corfu-separator ?\s)          ;; Orderless field separator
+;;   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+;;   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+;;   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+;;   ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
+;;   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+;;   ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
+;;   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+;;   (corfu-auto-prefix 2)
+;;   :hook (prog-mode . corfu-mode))
 
 ;; (use-package undo-tree
 ;;   :straight t
@@ -456,37 +518,44 @@
 ;;   (global-undo-tree-mode))
 
 (use-package vundo
-  :straight (vundo :type git :host github :repo "casouri/vundo")
+  :ensure (vundo :host github :repo "casouri/vundo")
   :commands (vundo)
   :custom (vundo-glyph-alist vundo-unicode-symbols))
 
+(use-package wgrep
+  :ensure t
+  :after consult)
+
 (use-package magit
-  :straight t
+  :ensure t
   :bind (("C-x g" . magit-status))
   :custom
   (magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
   (magit-revision-show-gravatars t)
+  ;; Enable nerd icons support; added in https://github.com/magit/magit/commit/223461b52c35b0f426c053f4c6e7e7637c4a9b73.
+  (magit-format-file-function #'magit-format-file-nerd-icons)
   :config
   (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell))
 
-(use-package magit-todos
-  :straight t
+(use-package difftastic
+  :ensure t
   :after magit
-  :hook (magit-mode . magit-todos-mode))
-
-(use-package magit-delta
-  :straight t
-  :after magit
-  :hook (magit-mode . magit-delta-mode))
+  :bind (:map magit-blame-read-only-mode-map
+              ("D" . difftastic-magit-diff)
+              ("S" . difftastic-magit-show))
+  :config
+  (transient-append-suffix 'magit-diff '(-1 -1)
+    [("D" "Difftastic diff (dwim)" difftastic-magit-diff)
+     ("S" "Difftastic show" difftastic-magit-show)]))
 
 (use-package forge
-  :straight t
+  :ensure t
   :after magit
   :custom
   (auth-sources '("~/.authinfo.gpg")))
 
 (use-package org
-  :straight (:type built-in)
+  :ensure nil
   :mode ("\\.org\\'" . org-mode)
   :bind (("C-c l" . org-store-link)
          ("C-c c" . org-capture)
@@ -498,13 +567,19 @@
   (org-src-window-setup 'current-window)
   (org-confirm-babel-evaluate nil)
   (org-startup-indented t)
+
+  (org-hide-emphasis-markers t)
+
   (org-html-doctype "html5")
 
   (org-log-done 'time)
 
   (org-todo-keywords
    '((sequence "TODO" "IN-PROGRESS" "WAITING" "|" "DONE" "CANCELLED")))
-  (org-catch-invisible-edits 'error)
+
+  ;; forbid editing in folded areas, it's just too confusing.
+  (org-fold-catch-invisible-edits 'error)
+
   :init
   ;; Not in :custom because `org-element-use-cache' is a `defvar'
   (setq org-element-use-cache nil)
@@ -539,17 +614,27 @@
      (python . t))))
 
 (use-package toc-org
-  :straight t
+  :ensure t
   :after (org)
   :config
   (add-hook 'org-mode-hook 'toc-org-mode))
 
+(use-package org-appear
+  :ensure (org-appear :host github :repo "awth13/org-appear")
+  :hook (org-mode . org-appear-mode))
+
+(use-package org-modern
+  :ensure t
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda)))
+
 (use-package org-roam
-  :straight t
+  :ensure t
   :init
   (setq org-roam-v2-ack t)
   :custom
   (org-roam-directory "~/Dropbox/org/roam/")
+  (org-roam-database-connector 'sqlite-builtin)
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
@@ -561,7 +646,7 @@
   (org-roam-db-autosync-mode))
 
 (use-package org-roam-ui
-  :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
   :config
   (setq org-roam-ui-sync-theme t
@@ -570,38 +655,76 @@
         org-roam-ui-open-on-start t))
 
 (use-package org-journal
-  :straight t
+  :ensure t
   :bind (("C-c C-j" . org-journal-new-entry))
   :custom
   (org-journal-dir "~/Dropbox/org/journal/"))
 
+(use-package dslide
+  :ensure (dslide :host github :repo "positron-solutions/dslide")
+  :commands dslide-deck-start)
+
+(use-package moc
+  :ensure (moc :host github :repo "positron-solutions/moc")
+  :after dslide)
+
 (use-package olivetti
-  :straight t
-  :commands olivetti-mode)
+  :ensure t
+  :commands olivetti-mode
+  :bind (("<f6>" . olivetti-mode)))
+
+(use-package otpp
+  :ensure t
+  :after project
+  :init
+  ;; If you like to define some aliases for better user experience
+  (defalias 'one-tab-per-project-mode 'otpp-mode)
+  (defalias 'one-tab-per-project-override-mode 'otpp-override-mode)
+  :config
+  (otpp-mode 1)
+  ;; If you want to advice the commands in `otpp-override-commands`
+  ;; to be run in the current's tab (so, current project's) root directory
+  (otpp-override-mode 1))
+
+;;; Erlang and Elixir
+(use-package elixir-ts-mode
+  :ensure nil
+  :mode (("\\.ex\\'" . elixir-ts-mode)
+         ("\\.exs\\'" . elixir-ts-mode)
+         ("mix\\.lock" . elixir-ts-mode))
+  :hook (before-save . lsp-format-buffer))
+
+(use-package erlang
+  :ensure t
+  :mode "\\.erl\\?\\'")
 
 (use-package dockerfile-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode "Dockerfile\\'")
 
 (use-package docker
-  :straight t
+  :ensure t
   :commands docker)
 
+(use-package kubernetes
+  :ensure t
+  :commands (kubernetes-overview))
+
 (use-package rego-mode
-  :straight t
+  :ensure t
   :mode "\\.rego\\'")
 
-(use-package clojure-mode
-  :straight t
+(use-package clojure-ts-mode
+  :ensure t
   :mode (("\\.edn$" . clojure-mode)
          ("\\.cljs$" . clojurescript-mode)
          ("\\.cljx$" . clojurex-mode)
          ("\\.cljc$" . clojurec-mode))
   :config
-  (add-hook 'clojure-mode-hook #'subword-mode))
+  (add-hook 'clojure-ts-mode-hook #'subword-mode))
 
 (use-package cider
-  :straight t
+  :ensure t
   :commands (cider cider-connect cider-jack-in)
   :custom
   (cider-eldoc-display-for-symbol-at-point nil)
@@ -629,92 +752,100 @@
 ;;   :config
 ;;   (slime-setup '(slime-fancy slime-cl-indent)))
 
+(use-package nix-ts-mode
+  :ensure t
+  :mode "\\.nix\\'")
+
 (use-package haskell-mode
-  :straight t
+  :ensure t
   :mode "\\.hs\\'"
   :config (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
 
 (use-package python
-  :straight (:type built-in)
+  :ensure nil
   :mode ("\\.py\\'" . python-ts-mode)
   :interpreter ("python" . python-ts-mode))
 
 (use-package jinja2-mode
-  :straight (jinja2-mode :type git :host github :repo "paradoxxxzero/jinja2-mode")
+  :ensure (jinja2-mode :host github :repo "paradoxxxzero/jinja2-mode")
   :mode "\\.j2\\'")
 
 (use-package scala-mode
-  :straight t
+  :ensure t
   :mode "\\.scala\\'")
 
 (use-package yasnippet
-  :straight t
+  :ensure t
   :after (:any lsp-mode tide)
   :bind (:map yas-minor-mode-map
               ("TAB" . nil)
               ("<tab>" . nil))
   :config
   (use-package yasnippet-snippets
-    :straight t)
+    :ensure t)
   (yas-global-mode 1))
 
-;; Using this only to treat any diretory that contains a .project file as a project.
-(use-package project-x
-  :straight (project-x :type git :host github :repo "karthink/project-x")
-  :after project
-  :config
-  (add-hook 'project-find-functions 'project-x-try-local 90))
-
 (use-package treemacs
-  :straight t
+  :ensure t
   :commands treemacs
   :bind (("M-0" . treemacs-select-window)
          ("<f8>" . treemacs)))
 
-(use-package treemacs-icons-dired
-  :straight t
-  :after (treemacs dired)
-  :config (treemacs-icons-dired-mode))
-
 (use-package treemacs-magit
-  :straight t
-  :after ( treemacs magit))
+  :ensure t
+  :after (treemacs magit))
 
 (use-package lsp-treemacs
-  :straight t
+  :ensure t
   :after (treemacs lsp-mode)
   :config
   (lsp-treemacs-sync-mode 1))
 
-(use-package csv-mode
-  :straight t
-  :mode "\\.csv\\'")
+(use-package project-treemacs
+  :ensure t
+  :after treemacs
+  :config
+  (project-treemacs-mode))
+
+(use-package treemacs-nerd-icons
+  :ensure t
+  :after treemacs
+  :config
+  (treemacs-load-theme "nerd-icons"))
 
 (use-package go-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode  "\\.go\\'")
 
 (use-package go-mod-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode  "go\\.mod\\'")
 
+(use-package lua-ts-mode
+  :ensure nil
+  :mode "\\.lua\\'")
+
 (use-package lsp-mode
-  :straight t
+  :ensure t
   :bind-keymap
   ("C-c d" . lsp-command-map)
-  :hook ((lsp-mode . lsp-enable-which-key-integration)
-         (lsp-mode . lsp-lens-mode)
+  :hook ((lsp-mode . lsp-lens-mode)
          (go-ts-mode . lsp-deferred)
          (go-mod-ts-mode . lsp-deferred)
+         (clojure-ts-mode . lsp-deferred)
          (rust-ts-mode . lsp-deferred)
          (java-ts-mode . lsp-deferred)
          (python-ts-mode . lsp-deferred)
-	 (elixir-ts-mode . lsp-deferred)
+         (elixir-ts-mode . lsp-deferred)
          (dockerfile-ts-mode . lsp-deferred)
+         (typescript-ts-mode . lsp-deferred)
+         (tsx-ts-mode . lsp-deferred)
+         (terraform-mode . lsp-deferred)
          (lsp-managed-mode . lsp-diagnostics-modeline-mode)
          (lsp-completion-mode . my/lsp-mode-setup-completion))
   :custom
-  (lsp-completion-provider :none) ;; we use Corfu!
+  (lsp-elixir-ls-version "v0.15.0")
+    ;;; (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-rust-clippy-preference "on")
   (lsp-rust-server 'rust-analyzer)
   (lsp-prefer-capf t)
@@ -723,7 +854,10 @@
   (lsp-rust-analyzer-cargo-load-out-dirs-from-check t)
   (lsp-modeline-diagnostics-enable t)
   (lsp-headerline-breadcrumb-enable t)
-  (lsp-go-build-flags ["-tags=integration,debug"])
+  (lsp-go-build-flags ["-tags=integration,debug,integrationnew"])
+  (lsp-typescript-format-enable nil)
+  (lsp-javascript-format-enable nil)
+  (typescript-indent-level 2)
   :init
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
@@ -731,7 +865,7 @@
   :commands (lsp lsp-deferred))
 
 (use-package lsp-ui
-  :straight t
+  :ensure t
   :after lsp-mode
   :hook (lsp-mode . lsp-ui-mode)
   :custom
@@ -752,10 +886,8 @@
 
 ;; (use-package toolbox-tramp
 ;;   :straight (toolbox-tramp :type git
-;; 			     :host github
-;; 			     :repo "fejfighter/toolbox-tramp")
-;;   :custom
-;;   (toolbox-tramp-flatpak-wrap t)) ; Use `flatpak-spawn' when conecting
+;; 			   :host github
+;; 			   :repo "fejfighter/toolbox-tramp"))
 
 ;; (use-package docker-tramp
 ;;   ; :commands (docker-tramp-add-method)
@@ -764,12 +896,16 @@
 ;;   :straight t)
 
 (use-package java-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode "\\.java\\'")
 
 (use-package lsp-java
-  :straight t
-  :after (lsp-mode))
+  :ensure t
+  :custom
+  (lsp-java-format-enabled nil)
+  ; (lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.46.1/jdt-language-server-1.46.1-202504011455.tar.gz")
+  (lsp-java-vmargs '("-XX:+UseParallelGC" "-XX:GCTimeRatio=4" "-XX:AdaptiveSizePolicyWeight=90" "-Dsun.zip.disableMemoryMapping=true" "-Xmx4G" "-Xms100m" "-javaagent:/home/acc/.emacs.d/lombok.jar"))
+  :after lsp-mode)
 
 ;; (use-package dap-mode
 ;;   :straight t
@@ -804,11 +940,11 @@
 ;;   (add-hook 'python-mode-hook #'acc/configure-python-venv))
 
 (use-package deadgrep
-  :straight t
+  :ensure t
   :bind ("<f5>" . deadgrep))
 
 (use-package rust-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode "\\.rs\\'")
 
 ;; (use-package auctex
@@ -832,138 +968,125 @@
 ;;   :after (auctex)
 ;;   :init (setq reftex-plug-into-AUCTeX t))
 
-(use-package json-ts-mode
-  :straight t
-  :mode "\\.json\\'")
-
 (use-package typescript-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode "\\.ts\\'")
 
 (use-package tsx-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode "\\.tsx\\'")
 
-(use-package js-ts-mode
-  :straight (:type built-in)
-  :mode (("\\.js\\'" . js-ts-mode)
-         ("\\.jsx\\'" . js-ts-mode)))
-
-;;; AsciiDoc mode
-(use-package adoc-mode
-  :straight t
-  :mode "\\.adoc\\'")
+;; This can probably be removed because of `major-mode-remap-alist'
+;; (use-package js-ts-mode
+;;   :straight (:type built-in)
+;;   :mode (("\\.js\\'" . js-ts-mode)
+;;          ("\\.jsx\\'" . js-ts-mode)))
 
 ;;; YAML
 (use-package yaml-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 (use-package yaml-pro
-  :straight t
+  :ensure t
   :after yaml-ts-mode
   :hook (yaml-ts-mode . yaml-pro-ts-mode))
 
+;; Prism
+;; (use-package prism
+;;   :ensure (prism :host github :repo "alphapapa/prism.el")
+;;   :commands (prism-mode prism-whitespace-mode)
+;;   ;; :hook ((yaml-ts-mode . prism-whitespace-mode)
+;;   ;;        (json-ts-mode . prism-mode))
+;;   :config
+;;   ;; Taken from https://protesilaos.com/emacs/modus-themes#h:a94272e0-99da-4149-9e80-11a7e67a2cf2
+;;   (setq prism-num-faces 16)
+
+;;   (prism-set-colors
+;;    :desaturations '(0) ; do not change---may lower the contrast ratio
+;;    :lightens '(0)      ; same
+;;    :colors (modus-themes-with-colors
+;;              (list fg-main
+;;                    magenta
+;;                    cyan-cooler
+;;                    magenta-cooler
+;;                    blue
+;;                    magenta-warmer
+;;                    cyan-warmer
+;;                    red-cooler
+;;                    green
+;;                    fg-main
+;;                    cyan
+;;                    yellow
+;;                    blue-warmer
+;;                    red-warmer
+;;                    green-cooler
+;;                    yellow-faint))))
+
 ;;; toml mode
 (use-package toml-ts-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode "\\.toml\\'")
 
 ;; Terraform
 (use-package terraform-mode
-  :straight t
+  :ensure t
   :mode "\\.tf\\'")
 
+;; cue mode
+(use-package cue-mode
+  :ensure t
+  :mode "\\.cue\\'")
+
 ;;; plantuml
-(use-package plantuml-mode
-  :straight t
-  :mode "\\.plantuml\\'"
-  :custom
-  (plantuml-jar-path "/usr/share/java/plantuml.jar")
-  (plantuml-default-exec-mode 'jar)
-  (plantuml-output-type "txt"))
+;; (use-package plantuml-mode
+;;   :ensure t
+;;   :mode "\\.plantuml\\'"
+;;   :custom
+;;   (plantuml-jar-path "/usr/share/java/plantuml.jar")
+;;   (plantuml-default-exec-mode 'jar)
+;;   (plantuml-output-type "txt"))
 
 ;;; Groovy
 (use-package groovy-mode
-  :straight t
+  :ensure t
   :mode      "\\.\\(groovy\\|gradle\\)$")
 
-;;; Erlang and Elixir
-(use-package elixir-ts-mode
-  :straight t
-  :mode (("\\.exs\\?\\'" . elixir-ts-mode)
-         ("mix\\.lock" . elixir-ts-mode)))
+(use-package php-ts-mode
+  :ensure nil
+  :mode  "\\.php\\'")
 
-(use-package erlang
-  :straight t
-  :mode "\\.erl\\?\\'")
+(use-package nginx-mode
+  :ensure t
+  :mode "nginx\\.conf")
 
-(use-package php-mode
-  :straight t
-  :mode "\\.php\\'")
+(use-package eat
+  :ensure (eat :host codeberg
+               :repo "akib/emacs-eat"
+               :files ("*.el" ("term" "term/*.el") "*.texi"
+                       "*.ti" ("terminfo/e" "terminfo/e/*")
+                       ("terminfo/65" "terminfo/65/*")
+                       ("integration" "integration/*")
+                       (:exclude ".dir-locals.el" "*-tests.el")))
+  :custom (eat-term-scrollback-size 1048576)
+  :commands eat)
+
+;; typst
+(use-package typst-ts-mode
+  :ensure (:host sourcehut :repo "meow_king/typst-ts-mode")
+  :mode "\\.typ\\'"
+  :custom
+  (typst-ts-mode-watch-options "--open"))
 
 (use-package bart-mode
-  :straight t
+  :ensure t
   :custom
   (bart-station 'nbrk)
   (bart-manage-window t)
   :commands bart)
 
-(use-package smtpmail
-  :straight t
-  :after mu4e
-  :custom
-  (user-mail-address "alessandro.carlo@chiri.co")
-  (smtpmail-default-smtp-server "mail.gandi.net")
-  (smtpmail-smtp-server "mail.gandi.net")
-  (smtpmail-stream-type 'ssl)
-  (smtpmail-smtp-service 465)
-  (user-full-name "Alessandro Carlo Chirico")
-  (auth-sources '("~/.authinfo.gpg")))
-
-(use-package smtpmail-async
-  :after smtpmail
-  :custom
-  (send-mail-function 'async-smtpmail-send-it)
-  (message-send-mail-function 'async-smtpmail-send-it))
-
-(use-package mu4e
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :commands mu4e
-  :custom
-  (mail-user-agent 'mu4e-user-agent)
-  (mu4e-get-mail-command "mbsync -a")
-  (mu4e-hide-index-messages t)
-  (mu4e-update-interval nil)
-  (mu4e-change-filenames-when-moving t)
-  (mu4e-completing-read-function 'completing-read)
-  (mu4e-compose-signature-auto-include nil)
-  (mu4e-maildir "~/Maildir")
-  (mu4e-sent-folder   "/chirico-gandi/Sent")
-  (mu4e-drafts-folder "/chirico-gandi/Drafts")
-  (mu4e-trash-folder  "/chirico-gandi/Trash")
-  (mu4e-refile-folder "/chirico-gandi/Archive")
-  (mu4e-sent-messages-behavior 'sent)
-  (message-kill-buffer-on-exit nil)
-  (mu4e-view-show-addresses t)
-  (mu4e-context-policy 'pick-first)
-  (mu4e-compose-context-policy 'ask)
-  (message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
-  (message-citation-line-function 'message-insert-formatted-citation-line)
-  :bind (:map mu4e-main-mode-map
-              ("g" . mu4e-update-mail-and-index)))
-
-(use-package mu4e-views
-  :straight (mu4e-views :type git :host github :repo "lordpretzel/mu4e-views" :branch "mu-1.8-support")
-  :after mu4e
-  :bind (:map mu4e-headers-mode-map
-              ("v" . mu4e-views-mu4e-select-view-msg-method) ;; select viewing method
-              ("M-n" . mu4e-views-cursor-msg-view-window-down) ;; from headers window scroll the email view
-              ("M-p" . mu4e-views-cursor-msg-view-window-up) ;; from headers window scroll the email view
-              ("f" . mu4e-views-toggle-auto-view-selected-message))) ;; toggle opening messages automatically when moving in the headers view
-
 (use-package speed-type
-  :straight t
+  :ensure t
   :commands speed-type-text)
 
 ;;;; My utility functions!
