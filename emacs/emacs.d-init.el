@@ -221,7 +221,6 @@
   :ensure nil
   :custom
   ;; Set the path for tree-sitter's language definitions
-  (treesit-extra-load-path '("/home/acc/.emacs.d/tree-sitter/dist"))
   (treesit-font-lock-level 4)
   (java-ts-mode-indent-offset 2)
   :config
