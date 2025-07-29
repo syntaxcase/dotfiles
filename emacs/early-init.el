@@ -1,3 +1,8 @@
+;;; init.el --- Initialization -*- lexical-binding: t; -*-
+;;; Commentary:
+;;  acc's early-init.el file
+
+;;; Code:
 ;; Disable garbage collection for startup
 (setq gc-cons-threshold most-positive-fixnum)
 
