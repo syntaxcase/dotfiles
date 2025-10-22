@@ -255,6 +255,9 @@
   :config
   (global-eldoc-mode))
 
+(use-package cond-let
+  :ensure (cond-let :host github :repo "tarsius/cond-let"))
+
 ;; Expand-region replacement based on tree-sitter
 (use-package expreg
   :ensure (expreg :host github :repo "casouri/expreg")
