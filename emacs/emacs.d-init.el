@@ -708,10 +708,6 @@
   :ensure t
   :commands docker)
 
-(use-package kubernetes
-  :ensure t
-  :commands (kubernetes-overview))
-
 (use-package rego-mode
   :ensure t
   :mode "\\.rego\\'")
