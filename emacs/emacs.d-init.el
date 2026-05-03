@@ -297,7 +297,7 @@
   :hook (after-init . envrc-global-mode))
 
 (use-package vertico
-  :ensure (vertico :host github :repo "minad/vertico")
+  :ensure (vertico :host github :repo "minad/vertico" :tag "2.8")
   :config
   (vertico-mode)
   (vertico-multiform-mode)
@@ -318,7 +318,7 @@
   (savehist-mode))
 
 (use-package orderless
-  :ensure t
+  :ensure (orderless :host github :repo "oantolin/orderless" :tag "1.6")
   :after vertico
   :init
   (setq completion-styles '(orderless basic))
@@ -326,7 +326,7 @@
   (setq completion-category-overrides '((file (styles )))))
 
 (use-package marginalia
-  :ensure t
+  :ensure (marginalia :host github :repo "minad/marginalia" :tag "2.10")
   :config
   (marginalia-mode))
 
@@ -346,7 +346,7 @@
   (dired-mode . nerd-icons-dired-mode))
 
 (use-package consult
-  :ensure t
+  :ensure (consult :host github :repo "minad/consult" :tag "3.4")
   ;; Replace bindings. Lazily loaded due to use-package.
   :bind (("C-c h" . consult-history)
          ("C-x b" . consult-buffer)
@@ -381,7 +381,7 @@
   :bind ([remap xref-find-apropos] . #'consult-lsp-symbols))
 
 (use-package embark
-  :ensure t
+  :ensure (embark :host github :repo "oantolin/embark" :tag "1.2")
   :bind
   ("C-S-a" . embark-act)
   :init
@@ -423,7 +423,7 @@
          ("M-g t" . avy-goto-char-timer)))
 
 (use-package jinx
-  :ensure t
+  :ensure (jinx :host github :repo "minad/jinx" :tag "2.7")
   :hook ((text-mode . jinx-mode)
          (conf-mode . jinx-mode))
   :bind ([remap ispell-word] . jinx-correct))
@@ -435,7 +435,7 @@
          (rust-ts-mode . apheleia-mode)))
 
 (use-package goggles
-  :ensure t
+  :ensure (goggles :host github :repo "minad/goggles" :ref "73040c4dc8fe946d3657accb5dc4ed4065abd348")
   :hook ((prog-mode text-mode) . goggles-mode)
   :config
   (setq-default goggles-pulse nil))
@@ -626,7 +626,7 @@
   :hook (org-mode . org-appear-mode))
 
 (use-package org-modern
-  :ensure t
+  :ensure (org-modern :host github :repo "minad/org-modern" :tag "1.13")
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda)))
 
