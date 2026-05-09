@@ -647,14 +647,15 @@
   :config
   (org-roam-db-autosync-mode))
 
-(use-package org-roam-ui
-  :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-  :after org-roam
-  :config
-  (setq org-roam-ui-sync-theme t
-        org-roam-ui-follow t
-        org-roam-ui-update-on-save t
-        org-roam-ui-open-on-start t))
+;; Disable temporarily, simple-httpd is not working
+;; (use-package org-roam-ui
+;;   :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+;;   :after org-roam
+;;   :config
+;;   (setq org-roam-ui-sync-theme t
+;;         org-roam-ui-follow t
+;;         org-roam-ui-update-on-save t
+;;         org-roam-ui-open-on-start t))
 
 (use-package org-journal
   :ensure t
